@@ -1,7 +1,6 @@
 import { HoverEffect } from "../components/ui/card-hover-effect";
-import dribbble from "../assets/dribbble.svg";
+import Github from "../assets/github.svg";
 import linkedin from "../assets/linkedin.svg";
-import behance from "../assets/behance.svg";
 import insta from "../assets/insta.svg";
 import whatsapp from "../assets/whatsapp.svg";
 
@@ -25,9 +24,9 @@ const SocialAcc = () => {
 
 export const socialLink = [
   {
-    title: "Dribbble",
-    to: "https://dribbble.com/rajat_k_prajapati",
-    src: dribbble,
+    title: "Github",
+    to: "https://github.com/utkarsh032",
+    src: Github,
   },
   {
     title: "LinkedIn",
@@ -38,11 +37,6 @@ export const socialLink = [
     title: "Instagram",
     to: "https://www.instagram.com/utkarshraz/",
     src: insta,
-  },
-  {
-    title: "Behance",
-    to: "https://www.behance.net/rajat-k-prajapati",
-    src: behance,
   },
   {
     title: "Whatsapp",

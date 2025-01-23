@@ -1,5 +1,5 @@
 import { GoDownload } from "react-icons/go";
-import Resume from "../../src/assets/Rajat.pdf";
+import Resume from "../../src/assets/Resume.pdf";
 import { motion } from "framer-motion";
 
 const Hero = () => {

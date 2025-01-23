@@ -1,14 +1,11 @@
 import { useState } from "react";
 import { LuExternalLink } from "react-icons/lu";
-import Behance from "../assets/behance.png";
-import Dribbble from "../assets/dribbble.svg";
 
 import Project1 from "../assets/omnifood.gif";
 import Project2 from "../assets/destination.gif";
 import Project3 from "../assets/udemy.gif";
 import Project4 from "../assets/bharatestate.gif";
 import Project5 from "../assets/book.gif";
-import Project6 from "../assets/Deciphr.gif";
 import { motion } from "framer-motion";
 
 const Products = () => {
@@ -39,7 +36,7 @@ const ProjectItem = ({ project }) => {
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.3 }}
     >
-      <img src={project.src} className="rounded-xl" alt="project" />
+      <img src={project.src} className="rounded-xl" alt={project.name} />
       <div className="py-4 px-2">
         <h1 className="text-2xl font-bold uppercase">{project.name}</h1>
         <p className="font-thin line-clamp-3">{project.desc}</p>
@@ -72,53 +69,54 @@ const ProjectItem = ({ project }) => {
 export const ProjectLink = [
   {
     name: "Omnifood",
-    desc: "cyour premier destination for convenient and delicious food ordering. Designed for the modern food  Omnifood seamlessly connects you delights, right at your fingertips",
+    desc: `Your premier destination for convenient and delicious food ordering. 
+           Designed for the modern food enthusiast, Omnifood seamlessly connects you with culinary delights.`,
     tag1: "#html",
     tag2: "#css",
     tag3: "#js",
     to: "https://omnifood-utkarshraj.netlify.app/",
     src: Project1,
-    img: Behance,
   },
   {
-    name: "destination",
-    desc: "Destination is a modern travel app designed to simplify hotel bookings and trip planning for travelers. Built with React and SCSS, it offers a responsive and user-friendly interface. Explore and organize your journeys effortlessly with seamless integration of REST APIs.",
+    name: "Destination",
+    desc: `A modern travel app designed to simplify hotel bookings and trip planning for travelers. 
+           Built with React and SCSS, it offers a user-friendly interface and seamless API integration.`,
     tag1: "#react",
     tag2: "#scss",
     tag3: "#resapi",
     to: "https://destination-travelling-app.netlify.app/",
     src: Project2,
-    img: Behance,
   },
   {
     name: "Udemy-Clone",
-    desc: "It is an online learning platform that mimics the core features of Udemy. It includes a video player for course content, detailed course data, and user authentication with email validation. Additional features like Udemy Business and course posting enhance the platform, offering a comprehensive learning and teaching experience.",
+    desc: `An online learning platform mimicking Udemy's core features. 
+           It includes a video player, course data, and user authentication with additional features like course posting.`,
     tag1: "#react",
     tag2: "#tailwind",
     tag3: "#mongoDB",
     to: "https://github.com/utkarsh032/Udemy/tree/main/client",
     src: Project3,
-    img: Dribbble,
   },
   {
-    name: "bharate-state",
-    desc: "Bharat-Estate is a modern real estate platform for buying, selling, and renting properties in India. It features secure user authentication, real-time updates, and a responsive design for a seamless experience. Powered by a robust backend, it ensures efficiency and scalability for property management.",
+    name: "Bharat-Estate",
+    desc: `A modern real estate platform for buying, selling, and renting properties in India. 
+           Features secure authentication, real-time updates, and a responsive design for seamless property management.`,
     tag1: "#react",
     tag2: "#node",
     tag3: "#mongodb",
     to: "https://github.com/utkarsh032/Bharat-Estate",
     src: Project4,
-    img: Behance,
   },
   {
-    name: "book",
-    desc: "The Book Store App is a comprehensive platform designed to enhance the book-buying and selling experience. This application offers features such as browsing best-seller books, managing seller accounts, accessing promotional offers, and engaging with blog content.",
+    name: "Book Store App",
+    desc: `A comprehensive platform for enhancing the book-buying and selling experience. 
+           Offers features like browsing best-sellers, managing accounts, and accessing promotional offers.`,
     tag1: "#react",
     tag2: "#tailwind",
     tag3: "#mongoDB",
     to: "https://github.com/utkarsh032/book-store-app",
     src: Project5,
-    img: Behance,
-  }
+  },
 ];
+
 export default Products;

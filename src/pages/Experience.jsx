@@ -7,9 +7,9 @@ const Experience = () => {
     <section id="education" className="max-w-7xl mx-auto py-8 flex flex-col sm:flex-row">
       <div className="px-4 sm:w-1/2">
         <h1 className="text-neutral-100 text-4xl font-bold py-2 px-4 rounded-r-3xl rounded-tl-3xl bg-[#A11143] inline-block">
-          Experience
+          Education
         </h1>
-        {Experiences.map((item, index) => (
+        {Education.map((item, index) => (
           <div
             key={index}
             className="text-neutral-200 border border-[#610A26] my-4 p-4 rounded-2xl backdrop-blur-xl bg-[#150014]/50 transition-transform duration-300 hover:scale-105"
@@ -26,11 +26,11 @@ const Experience = () => {
               <ul className="list-disc pl-5">
                 <li className="py-1">
                   <span className="w-3 h-3 bg-[#A11143] animate-pulse rounded-full inline-block mr-2" />
-                  {item.quote1}
+                  {item.highlight1}
                 </li>
                 <li className="py-1">
                   <span className="w-3 h-3 bg-yellow-500 rounded-full inline-block mr-2" />
-                  {item.quote12}
+                  {item.highlight2}
                 </li>
               </ul>
             </div>
@@ -41,10 +41,10 @@ const Experience = () => {
       <div className="px-4 sm:w-1/2 md:flex md:flex-col">
         <div className="flex justify-end py-2">
           <h1 className="text-neutral-100 text-4xl font-bold py-2 px-4 rounded-tr-3xl rounded-l-3xl bg-[#A11143]">
-            Education
+            Achievemnet
           </h1>
         </div>
-        {Education.map((item, index) => (
+        {Achievement.map((item, index) => (
           <div
             key={index}
             className="text-neutral-200 border border-[#610A26] my-4 py-4 px-1 rounded-xl backdrop-blur-xl bg-[#150014]/50 transition-transform duration-300 hover:scale-105"
@@ -55,10 +55,10 @@ const Experience = () => {
             </div>
             <div className="md:px-8 px-2 py-2">
               <div className="flex items-center">
-                <h3 className="md:text-2xl text-xl font-bold">{item.role}</h3>
+                <h3 className="md:text-2xl text-xl font-bold">{item.title}</h3>
               </div>
               <div className="flex text-center items-center justify-between">
-                <p className="text-neutral-300 font-thin">{item.branch}</p>
+                <p className="text-neutral-300 font-thin">{item.organization}</p>
                 <a
                   href={item.href}
                   target="_blank"
@@ -77,50 +77,51 @@ const Experience = () => {
   );
 };
 
-const Experiences = [
+const Education = [
   {
-    duration: "Mar 2022 - Dec 2023",
-    role: "UI/UX Designer",
-    branch: "@Blowhorn, Bengaluru",
-    quote1: 'Developed user-centric "Integrated Fulfillment (IF)" dashboard, seamlessly integrating Warehouse & Transport Management functions.',
-    quote12: "Enhanced user experience across website and IF mobile app designs for seamless and efficient interaction.",
+    duration: "Apr 2021 - Jul 2023",
+    role: "Bachelor of Computer Applications",
+    branch: "Monad University, Meerut",
+    highlight1: "Developed a user-centric 'Integrated Fulfillment (IF)' dashboard, integrating Warehouse & Transport Management functions.",
+    highlight2: "Enhanced user experience for websites and mobile apps, ensuring seamless and efficient interaction.",
   },
   {
-    duration: "Sep 2020 - Aug 2021",
-    role: "Graphic Designer",
-    branch: "@Solar Press, Kanpur",
-    quote1: "Worked on over 30 books, magazines, balance sheets & 50 packaging projects, learning printing processes and driving company growth.",
-    quote12: "Contributed to significant expansion by leveraging project experience and production process understanding.",
+    duration: "Apr 2023 - May 2023",
+    role: "Zero To Mastery Academy",
+    branch: "Online",
+    highlight1: "Worked on 30+ projects, including books, magazines, and packaging, learning end-to-end design processes.",
+    highlight2: "Leveraged project experience to contribute to production efficiency and company growth.",
   },
   {
-    duration: "Aug 2019 - May 2020",
-    role: "Graphic Designer",
-    branch: "@Gratia, Kanpur",
-    quote1: "Crafted engaging content, visuals, & packaging, boosting brand visibility.",
-    quote12: "Gained Digital Marketing & manufacturing insights, fueling business growth.",
-  },
-  {
-    duration: "Dec 2017 - Mar 2018",
-    role: "Graphic Mentor",
-    branch: "@MAAC, Lucknow",
-    quote1: "Instructed graphics software, mentoring students for career growth in design.",
-    quote12: "Guided students to enhance careers in graphics and design.",
+    duration: "May 2024 - Present",
+    role: "Full-Stack Web Development Program",
+    branch: "Masai School, Bangalore",
+    highlight1: "Crafted engaging content and applications that enhanced brand visibility and usability.",
+    highlight2: "Acquired expertise in digital marketing, agile methodologies, and full-stack software development.",
   },
 ];
 
-const Education = [
+
+const Achievement = [
   {
-    duration: "Aug 2021 - Feb 2022",
-    role: "Full Stack UI/UX Designing",
-    branch: "@Masai, Bengaluru",
-    href: "https://drive.google.com/file/d/1ahEaPBZ_fRk52aMaulBHSHURqyNuazxV/view",
+    duration: "July 2024",
+    title: "SQL Certification",
+    organization: "HackerRank",
+    href: "https://drive.google.com/file/d/1iZ92CT04cZfffKFZdUT_xB3HbeUFz2n2/view?usp=sharing",
   },
   {
-    duration: "Jun 2015 - Apr 2017",
-    role: "Advanced Program in Digital Media & Design",
-    branch: "@MAAC, Kanpur",
-    href: "https://drive.google.com/file/d/1ahEaPBZ_fRk52aMaulBHSHURqyNuazxV/view",
+    duration: "April 2023",
+    title: "Complete React Developer",
+    organization: "Zero To Mastery Academy",
+    href: "https://drive.google.com/file/d/1NXs-Cui-IeWQny6sb0vz7Lya8WehsbsO/view?usp=sharing",
+  },
+  {
+    duration: "July 2024",
+    title: "Career Essentials in Generative AI",
+    organization: "Microsoft and LinkedIn Learning",
+    href: "https://drive.google.com/file/d/1ig0zRkknylaekrcZMXn-K8oMjtFqUA21/view?usp=sharing",
   },
 ];
+
 
 export default Experience;

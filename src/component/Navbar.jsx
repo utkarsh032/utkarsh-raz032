@@ -40,9 +40,15 @@ const Navbar = () => {
             Utkarsh
             <p className="animate-bounce bg-[#A11143] w-3 h-3 rounded-full inline-block"></p>
           </Link>
-          <button className="bg-[#A11143] text-neutral-300 rounded-md uppercase text-[18px] font-medium px-4 py-1 outline-none transition-all duration-500 ease-in-out transform">
+          <a
+            href="https://drive.google.com/file/d/1tXJDQZyaiTLMktPqpdXnnGXmVQQmQu20/view?usp=sharing"
+            className="bg-[#A11143] text-neutral-300 rounded-md uppercase text-[18px] font-medium px-4 py-1 outline-none transition-all duration-500 ease-in-out transform hover:scale-105"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             Resume
-          </button>
+          </a>
+
         </div>
       </div>
 
