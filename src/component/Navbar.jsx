@@ -1,4 +1,5 @@
-import { Link } from "react-scroll"; // Import from react-scroll
+import { Link as ScrollLink } from "react-scroll"; // Import for scrolling
+import { Link as RouterLink } from "react-router-dom"; // Import for routing
 import { useEffect, useState } from "react";
 
 const Navbar = () => {
@@ -31,7 +32,8 @@ const Navbar = () => {
     >
       <div className="w-full max-w-7xl mx-auto px-2 py-3">
         <div className="flex justify-between items-center">
-          <Link
+          {/* Smooth Scroll Link */}
+          <ScrollLink
             to="hero"
             smooth={true}
             duration={500}
@@ -39,34 +41,34 @@ const Navbar = () => {
           >
             Utkarsh
             <p className="animate-bounce bg-[#A11143] w-3 h-3 rounded-full inline-block"></p>
-          </Link>
-          <a
-            href="https://drive.google.com/file/d/1tXJDQZyaiTLMktPqpdXnnGXmVQQmQu20/view?usp=sharing"
-            className="bg-[#A11143] text-neutral-300 rounded-md uppercase text-[18px] font-medium px-4 py-1 outline-none transition-all duration-500 ease-in-out transform hover:scale-105"
-            target="_blank"
-            rel="noopener noreferrer"
+          </ScrollLink>
+
+          {/* Router Link for Resume */}
+          <RouterLink
+            to="/resume"
+            className="bg-[#A11143] text-neutral-300 rounded-md uppercase text-[18px] font-medium px-4 py-1 outline-none transition-all duration-500 ease-in-out transform hover:scale-105 cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#A11143]"
           >
             Resume
-          </a>
-
+          </RouterLink>
         </div>
       </div>
 
+      {/* Nav Links */}
       <div className="w-full flex justify-between text-xl max-w-7xl mx-auto px-4 py-2">
         {navLinks.map((item) => (
           <div
             key={item.label}
             className="relative group cursor-pointer hover:text-[#A11143] transition-all duration-500"
           >
-            {/* Use Link from react-scroll */}
-            <Link
+            {/* Smooth Scroll Link */}
+            <ScrollLink
               to={item.to}
-              smooth={true} // Enable smooth scroll
-              duration={500} // Duration of scroll
+              smooth={true}
+              duration={500}
               className="cursor-pointer"
             >
               {item.label}
-            </Link>
+            </ScrollLink>
             <span className="absolute left-0 bottom-0 w-0 h-[2px] bg-[#A11143] transition-all duration-300 group-hover:w-full"></span>
           </div>
         ))}

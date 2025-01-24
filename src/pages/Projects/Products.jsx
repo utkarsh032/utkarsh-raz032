@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { LuExternalLink } from "react-icons/lu";
 
-import Project1 from "../assets/omnifood.gif";
-import Project2 from "../assets/destination.gif";
-import Project3 from "../assets/udemy.gif";
-import Project4 from "../assets/bharatestate.gif";
-import Project5 from "../assets/book.gif";
+import Project1 from "../../assets/omnifood.gif";
+import Project2 from "../../assets/destination.gif";
+import Project3 from "../../assets/udemy.gif";
+import Project4 from "../../assets/bharatestate.gif";
+import Project5 from "../../assets/book.gif";
 import { motion } from "framer-motion";
 
 const Products = () => {
