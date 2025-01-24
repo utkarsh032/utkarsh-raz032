@@ -30,7 +30,6 @@ function App() {
         {/* Navbar and Hero section */}
         <div style={bgImageStyle}>
           <Navbar />
-          <Hero />
         </div>
 
         <div style={bgImageStyleNoCenter}>
@@ -40,6 +39,7 @@ function App() {
               path="/"
               element={
                 <>
+                  <Hero />
                   <About />
                   <Expertise />
                   <Products />
