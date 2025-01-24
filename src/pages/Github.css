@@ -1,0 +1,36 @@
+.calendar-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 2.5rem;
+  background-color: #40002e;
+  border: 1px solid #610A26;
+  border-radius: 10px;
+  padding: 1.5rem;
+}
+
+.calendar-heading {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #f3f3f3;
+  margin-bottom: 1rem;
+}
+
+.highlight {
+  color: #aaa6c3;
+}
+
+.calendar {
+  color: #aaa6c3;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .calendar-container {
+    padding: 1rem;
+  }
+
+  .calendar-heading {
+    font-size: 1.25rem;
+  }
+}

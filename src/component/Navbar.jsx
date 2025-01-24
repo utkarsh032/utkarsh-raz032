@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 const Navbar = () => {
   const navLinks = [
     { to: "about", label: "About" },
-    { to: "stack", label: "Stack" },
+    { to: "stack", label: "Tech&Stack" },
     { to: "education", label: "Education" },
     { to: "project", label: "Project" },
     { to: "contact", label: "Contact" }
