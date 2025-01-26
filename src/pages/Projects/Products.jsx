@@ -9,16 +9,21 @@ import Project5 from "../../assets/book.gif";
 import { motion } from "framer-motion";
 
 const Products = () => {
+  const [showAll, setShowAll] = useState(false);
+
   return (
     <section id="project" className="max-w-7xl mx-auto py-8 px-2 text-white">
       <h1 className="text-4xl font-bold py-6 text-center">My Projects</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-6">
-        {ProjectLink.map((project, index) => (
+        {ProjectLink.slice(0, showAll ? ProjectLink.length : 3).map((project, index) => (
           <ProjectItem key={index} project={project} />
         ))}
       </div>
-      <button className="flex mx-auto mt-4 px-4 py-2 bg-red-600 text-white rounded-full hover:bg-red-700 transition duration-300">
-        Show More
+      <button
+        onClick={() => setShowAll(!showAll)}
+        className="flex mx-auto mt-4 px-4 py-2 bg-red-600 text-white rounded-full hover:bg-red-700 transition duration-300"
+      >
+        {showAll ? "Show Less" : "Show More"}
       </button>
     </section>
   );
@@ -38,7 +43,19 @@ const ProjectItem = ({ project }) => {
     >
       <img src={project.src} className="rounded-xl" alt={project.name} />
       <div className="py-4 px-2">
-        <h1 className="text-2xl font-bold uppercase">{project.name}</h1>
+        <div className="flex justify-between">
+          <h1 className="text-2xl font-bold uppercase">{project.name}</h1>
+          <a
+            href={project.to}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="border rounded-full text-lg px-2  duration-300 hover:bg-white hover:text-black flex items-center gap-1"
+          >
+            <span className="flex items-center gap-1">
+              View <LuExternalLink />
+            </span>
+          </a>
+        </div>
         <p className="font-thin line-clamp-3">{project.desc}</p>
         <div className="flex justify-between py-1 my-2 text-center">
           <div className="flex gap-1">
@@ -46,20 +63,6 @@ const ProjectItem = ({ project }) => {
             <p className="text-[#24FF00]">{project.tag2}</p>
             <p className="text-[#FFF500]">{project.tag3}</p>
           </div>
-          <a
-            href={project.to}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="border rounded-full text-lg px-2 block duration-300 hover:bg-white hover:text-black flex items-center gap-1"
-          >
-            {hovered ? (
-              <span className="flex items-center gap-1">
-                View <LuExternalLink />
-              </span>
-            ) : (
-              "View"
-            )}
-          </a>
         </div>
       </div>
     </motion.div>

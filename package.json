@@ -19,6 +19,8 @@
     "react-pdf-js": "^5.1.0",
     "react-router-dom": "^6.23.0",
     "react-scroll": "^1.9.0",
+    "react-slick": "^0.30.3",
+    "slick-carousel": "^1.8.1",
     "tailwind-merge": "^2.3.0"
   },
   "devDependencies": {
