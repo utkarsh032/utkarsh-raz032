@@ -1,65 +1,119 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-// import "./App.css";
-import Navbar from "./component/Navbar";
-import Hero from "./pages/Hero";
-import About from "./pages/About";
-import SocialAcc from "./pages/SocialAcc";
-import Products from "./pages/Projects/Products";
-import Experience from "./pages/Experience";
-import heroBg from "./assets/hero.jpg";
-import { Github } from "./pages/Github/Github";
-import { Expertise } from "./pages/Expertise/Expertise";
-import { Resume } from "./pages/Resume/Resume";
+import { lazy, Suspense, useEffect, useState } from "react";
+import { BrowserRouter, Navigate, Outlet, Route, Routes, useLocation, useParams } from "react-router-dom";
+import { applySeo, getSeo } from "./seo";
+import { useIsoLayoutEffect } from "./hooks/motion";
+import { profile } from "./data/profile";
+import { useScrollSpy } from "./hooks/useScrollSpy";
+import { Nav, TraceRail } from "./components/Nav";
+import { CommandMenu } from "./components/CommandMenu";
+import { DocViewerProvider } from "./components/DocViewer";
+import { Footer } from "./sections/Closing";
+import { NotFound } from "./pages/NotFound";
+import Home from "./pages/Home";
 
-function App() {
-  const bgImageStyle = {
-    backgroundImage: `url(${heroBg})`,
-    backgroundSize: "cover",
-    backgroundRepeat: "no-repeat",
-    backgroundPosition: "center",
-  };
-  const bgImageStyleNoCenter = {
-    backgroundImage: `url(${heroBg})`,
-    backgroundSize: "cover",
-    backgroundRepeat: "no-repeat",
-  };
+const Projects = lazy(() => import("./pages/Projects"));
+const Beyond = lazy(() => import("./pages/Beyond"));
+const ProjectRoute = lazy(() => import("./pages/ProjectRoute"));
+
+/** Keeps title, meta tags and structured data in sync with the route. */
+function SeoManager() {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    applySeo(getSeo(pathname));
+  }, [pathname]);
+  return null;
+}
+
+/** Scrolls to the hash target after navigation, otherwise to the top. */
+function ScrollManager() {
+  const { pathname, hash } = useLocation();
+  useEffect(() => {
+    if (!hash) {
+      window.scrollTo(0, 0);
+      return;
+    }
+    // Wait a frame so lazily rendered routes have mounted their sections.
+    const id = decodeURIComponent(hash.slice(1));
+    const frame = requestAnimationFrame(() => document.getElementById(id)?.scrollIntoView());
+    return () => cancelAnimationFrame(frame);
+  }, [pathname, hash]);
+  return null;
+}
+
+function Layout() {
+  const { scrolled, progress, activeId, span } = useScrollSpy();
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  // Enable reveal animations only after hydration, once on-screen content is marked visible.
+  // (Parent layout effects run after their children's.)
+  useIsoLayoutEffect(() => {
+    document.documentElement.classList.add("js");
+  }, []);
+
+  useEffect(() => {
+    const onKey = (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        setMenuOpen((o) => !o);
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
 
   return (
-    <Router>
-      <div className="relative z-0 bg-primary bg-cover bg-no-repeat bg-center">
-        {/* Navbar and Hero section */}
-        <div style={bgImageStyle}>
-          <Navbar />
-        </div>
-
-        <div style={bgImageStyleNoCenter}>
-          {/* All components will be shown on the main route */}
-          <Routes>
-            <Route
-              path="/"
-              element={
-                <>
-                  <Hero />
-                  <About />
-                  <Expertise />
-                  <Products />
-                  <Experience />
-                  <Github />
-                  <SocialAcc />
-                </>
-              }
-            />
-            {/* About route */}
-            <Route path="/about" element={<About />} />
-            <Route path="/stack" element={<Expertise />} />
-            <Route path="/project" element={<Products />} />
-            <Route path="/contact" element={<SocialAcc />} />
-            <Route path="/resume" element={<Resume />} />
-          </Routes>
-        </div>
-      </div>
-    </Router>
+    <DocViewerProvider>
+      <a className="skip" href="#main">Skip to content</a>
+      <ScrollManager />
+      <SeoManager />
+      <Nav scrolled={scrolled} activeId={activeId} onOpenMenu={() => setMenuOpen(true)} />
+      <TraceRail progress={progress} span={span} />
+      <main id="main" tabIndex={-1}>
+        <Suspense fallback={<div style={{ minHeight: "100vh" }} />}>
+          <Outlet />
+        </Suspense>
+      </main>
+      <Footer />
+      <CommandMenu open={menuOpen} onClose={() => setMenuOpen(false)} />
+    </DocViewerProvider>
   );
 }
 
-export default App;
+/** Case studies used to live at /work/:slug. */
+function WorkRedirect() {
+  const { slug } = useParams();
+  return <Navigate to={`/projects/${slug}`} replace />;
+}
+
+/** Old links to /resume open the PDF. */
+function ResumeRedirect() {
+  useEffect(() => {
+    window.location.replace(profile.resume);
+  }, []);
+  return null;
+}
+
+/** The route tree. Wrapped in BrowserRouter here and in StaticRouter by the prerenderer. */
+export function AppRoutes() {
+  return (
+    <Routes>
+        <Route element={<Layout />}>
+          <Route index element={<Home />} />
+          <Route path="projects" element={<Projects />} />
+          <Route path="projects/:slug" element={<ProjectRoute />} />
+          <Route path="beyond" element={<Beyond />} />
+          <Route path="work/:slug" element={<WorkRedirect />} />
+          <Route path="*" element={<NotFound />} />
+        </Route>
+        <Route path="resume" element={<ResumeRedirect />} />
+    </Routes>
+  );
+}
+
+export default function App() {
+  return (
+    <BrowserRouter>
+      <AppRoutes />
+    </BrowserRouter>
+  );
+}
