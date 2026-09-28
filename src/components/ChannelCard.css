@@ -1,0 +1,38 @@
+/* Channel cards: shared by the home Beyond section and /beyond */
+.bc { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+@media (max-width: 960px) { .bc { grid-template-columns: 1fr; } }
+.bc-card {
+  --accent: var(--blue);
+  position: relative; display: flex; flex-direction: column; gap: 14px; padding: 24px;
+  border: 1px solid var(--line); border-radius: 14px; background: var(--bg1);
+  transition: border-color var(--dur-fast) var(--ease), transform var(--dur-fast) var(--ease);
+}
+.bc-card:hover { border-color: var(--line2); }
+.bc-youtube { --accent: #ff4e45; }
+.bc-medium { --accent: var(--t1); }
+.bc-leetcode, .bc-codechef, .bc-stackoverflow { --accent: var(--warn); }
+.bc-linkedin-posts { --accent: var(--blue); }
+.bc-x, .bc-devto, .bc-opensource { --accent: var(--t1); }
+.bc-hashnode, .bc-codeforces { --accent: var(--violet); }
+.bc-substack { --accent: #ff6719; }
+.bc-gfg { --accent: var(--ok); }
+.bc-talks { --accent: var(--magenta); }
+.bc-main { display: grid; grid-template-columns: auto 1fr; column-gap: 12px; align-items: center; color: var(--t1); }
+/* Whole card is clickable via the primary link; the featured link sits above it. */
+.bc-main::after { content: ""; position: absolute; inset: 0; border-radius: inherit; }
+.bc-main:focus-visible { outline: none; }
+.bc-card:has(.bc-main:focus-visible) { outline: 2px solid var(--blue); outline-offset: 2px; }
+.bc-ic { grid-row: span 2; display: grid; place-items: center; width: 40px; height: 40px; border-radius: 10px; background: var(--s1); border: 1px solid var(--line); color: var(--accent); }
+.bc-name { font: 500 18px/1.2 var(--sans); letter-spacing: -0.01em; }
+.bc-handle { font: 12px/1.4 var(--mono); color: var(--t3); }
+.bc-blurb { font-size: 14.5px; color: var(--t2); }
+.bc-soon { border-style: dashed; background: transparent; }
+.bc-soon .bc-main::after { content: none; }
+.bc-soon .bc-ic { color: var(--t3); }
+.bc-soon .bc-name { color: var(--t2); }
+.bc-soon .bc-blurb { color: var(--t3); }
+.bc-soon:hover { border-color: var(--line); }
+.bc-feat { position: relative; z-index: 1; display: grid; gap: 6px; padding: 12px 14px; border-radius: 8px; background: var(--s1); color: var(--t2); font-size: 14px; line-height: 1.4; }
+.bc-feat:hover { color: var(--t1); }
+.bc-cta { margin-top: auto; font-size: 12px; color: var(--t3); }
+.bc-card:hover .bc-cta { color: var(--accent); }
