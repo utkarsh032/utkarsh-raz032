@@ -1,0 +1,21 @@
+.cmdk {
+  padding: 0; border: 1px solid var(--line2); border-radius: 14px; background: var(--s1); color: var(--t2);
+  width: min(560px, calc(100vw - 32px)); margin: max(12vh, 24px) auto auto;
+  box-shadow: 0 40px 120px -20px rgba(0, 0, 0, 0.8);
+}
+.cmdk::backdrop { background: rgba(5, 7, 11, 0.7); backdrop-filter: blur(4px); }
+.cmdk-in { display: flex; align-items: center; gap: 10px; padding: 14px 16px; border-bottom: 1px solid var(--line); }
+.cmdk-prompt { color: var(--blue); }
+.cmdk-in input { flex: 1; min-width: 0; background: transparent; border: 0; outline: 0; color: var(--t1); font: 15px var(--sans); }
+.cmdk ul { padding: 8px; max-height: min(60vh, 440px); overflow: auto; }
+.cmdk-grp { font: 500 10.5px/1 var(--mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--t4); padding: 12px 12px 6px; }
+.cmdk li button {
+  display: flex; width: 100%; justify-content: space-between; align-items: center; gap: 12px;
+  padding: 11px 12px; border-radius: 8px; color: var(--t2); font: 14px var(--sans);
+  background: transparent; border: 0; cursor: pointer; text-align: left;
+}
+.cmdk li button.active { background: var(--s3); color: var(--t1); }
+.cmdk li button span { font: 11px var(--mono); color: var(--t3); }
+.cmdk-empty { padding: 16px 12px; font-size: 14px; color: var(--t3); }
+.cmdk-note { padding: 0 20px; font: 12px/1 var(--mono); color: var(--ok); }
+.cmdk-note:not(:empty) { padding-block: 0 14px; }
