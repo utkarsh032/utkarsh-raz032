@@ -1,0 +1,18 @@
+/* Layer strip: ui · api · data */
+.lstrip { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px; }
+.lstrip-seg { position: relative; height: 4px; border-radius: 2px; background: rgba(255, 255, 255, 0.06); }
+.lstrip-seg.on.s-ui { background: var(--blue); }
+.lstrip-seg.on.s-api { background: var(--violet); }
+.lstrip-seg.on.s-data { background: var(--cyan); }
+.lstrip-seg em { position: absolute; top: 9px; left: 0; font: 500 10px/1 var(--mono); font-style: normal; letter-spacing: 0.1em; text-transform: uppercase; color: var(--t4); }
+.lstrip-seg.on em { color: var(--t3); }
+
+/* Request/data flow: a vertical pipeline, so it reads the same at every width */
+.pflow { display: grid; padding: 8px 16px; border-radius: 10px; background: var(--bg0); border: 1px solid var(--line); font: 12px/1.3 var(--mono); }
+.pflow li { position: relative; display: grid; grid-template-columns: 10px minmax(0, auto) minmax(0, 1fr); align-items: center; gap: 14px; padding: 8px 0; }
+.pflow li + li { border-top: 1px dashed var(--line); }
+.pflow li:not(:last-child)::after { content: ""; position: absolute; left: 4.5px; top: calc(50% + 6px); height: calc(100% - 4px); width: 1px; background: var(--line2); }
+.pflow-node { position: relative; z-index: 1; width: 10px; height: 10px; border-radius: 3px; border: 1.5px solid var(--tone); background: color-mix(in srgb, var(--tone) 25%, transparent); }
+.pflow b { color: var(--t1); font-weight: 500; white-space: nowrap; }
+.pflow small { color: var(--t3); font-size: 11px; text-align: right; overflow-wrap: anywhere; }
+.pflow-ui { --tone: var(--blue); } .pflow-api { --tone: var(--violet); } .pflow-data { --tone: var(--cyan); } .pflow-ship { --tone: var(--magenta); }
