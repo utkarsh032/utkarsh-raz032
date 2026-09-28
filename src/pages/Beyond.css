@@ -1,0 +1,3 @@
+.by { display: grid; gap: 48px; padding-bottom: 96px; }
+.by-group h2 { margin-bottom: 16px; }
+.by-group h2 span { color: var(--t4); margin-left: 6px; }
