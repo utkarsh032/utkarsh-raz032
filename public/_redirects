@@ -1,0 +1,6 @@
+# Real HTTP redirects for old URLs
+/work/*   /projects/:splat          301
+/resume   /Utkarsh_Raj_Resume.pdf   301
+
+# Prerendered pages are served as files; anything else is a real 404
+/*        /404.html                 404
