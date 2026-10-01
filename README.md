@@ -41,3 +41,18 @@ information only.
 ## Deploy
 
 Netlify. `public/_redirects` sends every route to `index.html` so `/work/:slug` works on refresh.
+
+### Contact form
+
+The contact form posts to `/api/contact`, a Netlify Function (`netlify/functions/contact.mjs`) that validates the
+message and emails it through [Resend](https://resend.com), with the visitor's address as reply-to. Set these in
+Netlify → Site configuration → Environment variables:
+
+| Variable         | Required | Notes                                                                                  |
+| ---------------- | -------- | -------------------------------------------------------------------------------------- |
+| `RESEND_API_KEY` | yes      | From the Resend dashboard                                                              |
+| `CONTACT_FROM`   | no       | Sender on a domain verified in Resend. The default, `onboarding@resend.dev`, only delivers to the Resend account's own email |
+| `CONTACT_TO`     | no       | Inbox to deliver to. Defaults to `profile.email`                                       |
+
+Plain `npm run dev` doesn't run functions, so the form shows an error with a link to open the visitor's mail app instead.
+To test sending locally, run `npx netlify dev` with `RESEND_API_KEY` in a `.env` file.

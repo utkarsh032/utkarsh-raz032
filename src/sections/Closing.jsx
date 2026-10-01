@@ -1,4 +1,4 @@
-import { lazy, Suspense, useState } from "react";
+import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { BUILD_DATE, useNow } from "../hooks/useNow";
 import { Link } from "react-router-dom";
 import github from "../data/github.json";
@@ -11,6 +11,7 @@ import { Icon } from "../components/Icon";
 import { WindowBar } from "../components/WindowBar";
 import { useMagnetic, useOnEnter } from "../hooks/motion";
 import { copyText } from "../utils/clipboard";
+import { CONTACT_LIMITS, sendMessage } from "../utils/contact";
 import { SectionLink } from "../components/SectionLink";
 import { Reveal, Section, SectionHeader } from "../components/Section";
 import "./Closing.css";
@@ -91,23 +92,42 @@ function useLocalTime(timeZone) {
   return now ? now.toLocaleTimeString("en-GB", { timeZone, hour: "2-digit", minute: "2-digit" }) : "--:--";
 }
 
-/** Drafts an email in the visitor's own mail app. There is no backend, so nothing is sent from the site. */
+/** Sends a message through the contact function, falling back to the visitor's mail app if the service is down. */
 function Composer() {
   const send = useMagnetic();
   const [topic, setTopic] = useState(profile.openTo[0]);
   const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
+  const [company, setCompany] = useState(""); // Honeypot: hidden from people, filled in by bots.
+  const [status, setStatus] = useState({ state: "idle" }); // idle | sending | sent | error
   const [note, setNote] = useState("");
+  const startedAt = useRef(0);
+  useEffect(() => { startedAt.current = Date.now(); }, []);
 
   const who = name.trim();
   const subject = who ? `${topic.subject} from ${who}` : topic.subject;
   const body = [message.trim(), who && `— ${who}`].filter(Boolean).join("\n\n");
-  const href = `mailto:${profile.email}?subject=${encodeURIComponent(subject)}${body ? `&body=${encodeURIComponent(body)}` : ""}`;
+  const mailto = `mailto:${profile.email}?subject=${encodeURIComponent(subject)}${body ? `&body=${encodeURIComponent(body)}` : ""}`;
+  const sending = status.state === "sending";
 
   const copy = async () => setNote((await copyText(profile.email)) ? "Email address copied" : "Select the address to copy");
-  const submit = (e) => {
+  const submit = async (e) => {
     e.preventDefault();
-    window.location.href = href;
+    if (sending) return;
+    setNote("");
+    setStatus({ state: "sending" });
+    const res = await sendMessage({ topic: topic.id, name, email, message, company, startedAt: startedAt.current });
+    if (res.ok) {
+      setStatus({ state: "sent", to: email.trim() });
+      setMessage("");
+    } else {
+      setStatus({ state: "error", error: res.error, retryable: res.retryable });
+    }
+  };
+  const reset = () => {
+    startedAt.current = Date.now();
+    setStatus({ state: "idle" });
   };
 
   return (
@@ -115,49 +135,91 @@ function Composer() {
       <WindowBar file="mail / new-message.eml">
         <span className="wbar-status"><span className="wbar-led" aria-hidden="true" />{profile.availability.toLowerCase()}</span>
       </WindowBar>
-      <form className="compose-body" onSubmit={submit}>
-        <div className="compose-row">
-          <span className="compose-k">to</span>
-          <span className="compose-to">{profile.email}</span>
-          <button className="compose-copy" type="button" onClick={copy}>copy</button>
+      {status.state === "sent" ? (
+        <div className="compose-sent" role="status">
+          <p className="cmd"><b>$</b> sent · 200 OK</p>
+          <h3>Message sent.</h3>
+          <p>Thanks{who && `, ${who}`}. I&apos;ll reply to <span className="mono">{status.to}</span>, usually within a couple of days.</p>
+          <button className="btn btn-ghost btn-sm" type="button" onClick={reset}>Write another</button>
         </div>
-        <fieldset className="compose-row compose-topics">
-          <legend className="compose-k">about</legend>
-          <div className="topics">
-            {profile.openTo.map((t) => (
-              <label key={t.id} className="topic">
-                <input type="radio" name="topic" value={t.id} checked={topic.id === t.id} onChange={() => setTopic(t)} />
-                <span>{t.label}</span>
-              </label>
-            ))}
+      ) : (
+        <form className="compose-body" onSubmit={submit} aria-busy={sending}>
+          <div className="compose-row">
+            <span className="compose-k">to</span>
+            <span className="compose-to">{profile.email}</span>
+            <button className="compose-copy" type="button" onClick={copy}>copy</button>
           </div>
-        </fieldset>
-        <div className="compose-row">
-          <label className="compose-k" htmlFor="c-name">from</label>
-          <input
-            id="c-name"
-            className="compose-in"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Your name"
-            autoComplete="name"
+          <fieldset className="compose-row compose-topics" disabled={sending}>
+            <legend className="compose-k">about</legend>
+            <div className="topics">
+              {profile.openTo.map((t) => (
+                <label key={t.id} className="topic">
+                  <input type="radio" name="topic" value={t.id} checked={topic.id === t.id} onChange={() => setTopic(t)} />
+                  <span>{t.label}</span>
+                </label>
+              ))}
+            </div>
+          </fieldset>
+          <div className="compose-row">
+            <label className="compose-k" htmlFor="c-name">from</label>
+            <input
+              id="c-name"
+              className="compose-in"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Your name"
+              autoComplete="name"
+              maxLength={CONTACT_LIMITS.name}
+              readOnly={sending}
+            />
+          </div>
+          <div className="compose-row">
+            <label className="compose-k" htmlFor="c-email">reply</label>
+            <input
+              id="c-email"
+              className="compose-in"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="you@example.com"
+              autoComplete="email"
+              maxLength={CONTACT_LIMITS.email}
+              required
+              readOnly={sending}
+            />
+          </div>
+          <div className="compose-trap" aria-hidden="true">
+            <label htmlFor="c-company">Company</label>
+            <input id="c-company" name="company" tabIndex={-1} autoComplete="off" value={company} onChange={(e) => setCompany(e.target.value)} />
+          </div>
+          <label className="sr-only" htmlFor="c-msg">Message</label>
+          <textarea
+            id="c-msg"
+            className="compose-msg"
+            rows={5}
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            placeholder="What are you building, and where could I help?"
+            maxLength={CONTACT_LIMITS.message}
+            required
+            readOnly={sending}
           />
-        </div>
-        <label className="sr-only" htmlFor="c-msg">Message</label>
-        <textarea
-          id="c-msg"
-          className="compose-msg"
-          rows={5}
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          placeholder="What are you building, and where could I help?"
-        />
-        <div className="compose-foot">
-          <p className="compose-hint">Opens in your email app with this filled in. Nothing is sent from this site.</p>
-          <button className="btn btn-primary" type="submit" ref={send}>Open in email <span aria-hidden="true">→</span></button>
-        </div>
-        <p className="mail-note" role="status">{note}</p>
-      </form>
+          <div className="compose-foot">
+            <p className="compose-hint">Sent straight to my inbox. Your email is only used to reply.</p>
+            <button className="btn btn-primary" type="submit" ref={send} disabled={sending}>
+              {sending ? "Sending…" : "Send message"} <span aria-hidden="true">→</span>
+            </button>
+          </div>
+          <p className={`mail-note${status.state === "error" ? " is-error" : ""}`} role="status">
+            {status.state === "error" ? (
+              <>
+                {status.error}
+                {status.retryable && <> <a href={mailto}>Open in your email app instead →</a></>}
+              </>
+            ) : note}
+          </p>
+        </form>
+      )}
     </Reveal>
   );
 }

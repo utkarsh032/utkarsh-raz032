@@ -11,6 +11,7 @@ module.exports = {
   parserOptions: { ecmaVersion: 'latest', sourceType: 'module' },
   settings: { react: { version: '18.2' } },
   plugins: ['react-refresh'],
+  overrides: [{ files: ['vite.config.js', 'scripts/**', 'netlify/**'], env: { node: true } }],
   rules: {
     'react/jsx-no-target-blank': 'off',
     'react/prop-types': 'off',

@@ -25,3 +25,7 @@ dist-ssr
 
 # Prerender server bundle
 dist-ssr
+
+# Local secrets and Netlify CLI state
+.env
+.netlify

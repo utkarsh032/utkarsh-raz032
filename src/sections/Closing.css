@@ -80,6 +80,14 @@
 .compose-hint { max-width: 30ch; font: 11.5px/1.5 var(--mono); color: var(--t3); }
 .mail-note { padding: 0 18px 14px; font: 12px/1 var(--mono); color: var(--ok); }
 .mail-note:empty { display: none; }
+.mail-note.is-error { color: var(--warn); line-height: 1.6; }
+.mail-note a { color: var(--t1); text-decoration: underline; text-underline-offset: 3px; }
+.compose-body .btn:disabled { opacity: 0.7; cursor: progress; }
+.compose-trap { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+.compose-sent { display: grid; justify-items: start; gap: 14px; padding: 40px 18px 32px; min-height: 360px; align-content: center; }
+.compose-sent h3 { font-size: 26px; letter-spacing: -0.02em; color: var(--t1); }
+.compose-sent p:not(.cmd) { max-width: 40ch; color: var(--t2); }
+.compose-sent .mono { color: var(--t1); overflow-wrap: anywhere; }
 
 /* Footer */
 .footer { border-top: 1px solid var(--line); padding-block: 40px calc(40px + env(safe-area-inset-bottom, 0px)); }
