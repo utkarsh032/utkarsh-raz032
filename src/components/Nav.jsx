@@ -5,6 +5,8 @@ import { navSections, profile, resumeDoc } from "../data/profile";
 import { DocLink } from "./DocViewer";
 import { toDoc } from "../utils/docs";
 import { SectionLink } from "./SectionLink";
+import { Icon } from "./Icon";
+import { setTheme, themes, useTheme } from "../hooks/useTheme";
 import "./Nav.css";
 
 export function Nav({ scrolled, activeId: sectionId, onOpenMenu }) {
@@ -12,6 +14,10 @@ export function Nav({ scrolled, activeId: sectionId, onOpenMenu }) {
   const activeId = pathname === "/" ? sectionId : null;
   const linksRef = useRef(null);
   const [indicator, setIndicator] = useState({ x: 0, w: 0 });
+  const themeId = useTheme();
+  const themeIndex = Math.max(themes.findIndex((t) => t.id === themeId), 0);
+  const currentTheme = themes[themeIndex];
+  const nextTheme = themes[(themeIndex + 1) % themes.length];
 
   // Slide the underline to the active link.
   useIsoLayoutEffect(() => {
@@ -45,6 +51,15 @@ export function Nav({ scrolled, activeId: sectionId, onOpenMenu }) {
               {profile.availability}
             </span>
           )}
+          <button
+            className="icon-btn nav-theme"
+            type="button"
+            onClick={() => setTheme(nextTheme.id)}
+            aria-label={`Theme: ${currentTheme.label}. Switch to ${nextTheme.label}`}
+            title={`Theme: ${currentTheme.label}`}
+          >
+            <Icon name={currentTheme.icon} />
+          </button>
           <DocLink className="btn btn-ghost btn-sm nav-resume" doc={toDoc(resumeDoc)}>
             Resume
           </DocLink>
@@ -54,16 +69,5 @@ export function Nav({ scrolled, activeId: sectionId, onOpenMenu }) {
         </div>
       </div>
     </header>
-  );
-}
-
-export function TraceRail({ progress, span }) {
-  const { pathname } = useLocation();
-  if (pathname !== "/") return null;
-  return (
-    <div className="rail" aria-hidden="true">
-      <i style={{ transform: `scaleY(${progress})` }} />
-      <b>span {span ?? "00 · identity"}</b>
-    </div>
   );
 }

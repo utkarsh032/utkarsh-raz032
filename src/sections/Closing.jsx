@@ -269,6 +269,22 @@ export function Contact() {
   );
 }
 
+const inCategories = (...cats) => liveChannels.filter((c) => cats.includes(c.category));
+
+// Footer link columns, grouped so the list stays scannable as channels are added.
+const footGroups = [
+  {
+    label: "Connect",
+    links: [
+      { name: "GitHub", href: profile.links.github },
+      { name: "LinkedIn", href: profile.links.linkedin },
+      ...inCategories("Community"),
+    ],
+  },
+  { label: "Writing & video", links: inCategories("Writing", "Video") },
+  { label: "Practice", links: inCategories("Practice") },
+].filter((g) => g.links.length);
+
 export function Footer() {
   const year = (useNow() ?? BUILD_DATE).getFullYear();
   return (
@@ -283,10 +299,22 @@ export function Footer() {
           <p className="foot-motto">“{profile.motto}”</p>
         </div>
         <nav aria-label="Footer">
-          {navSections.map((s) => <SectionLink key={s.id} id={s.id}>{s.label}</SectionLink>)}
-          <a href={profile.links.github} target="_blank" rel="noopener">GitHub</a>
-          <a href={profile.links.linkedin} target="_blank" rel="noopener">LinkedIn</a>
-          {liveChannels.map((c) => <a key={c.id} href={c.href} target="_blank" rel="noopener">{c.name}</a>)}
+          <div className="foot-col">
+            <p className="label">Site</p>
+            <ul>
+              {navSections.map((s) => <li key={s.id}><SectionLink id={s.id}>{s.label}</SectionLink></li>)}
+            </ul>
+          </div>
+          {footGroups.map((g) => (
+            <div className="foot-col" key={g.label}>
+              <p className="label">{g.label}</p>
+              <ul>
+                {g.links.map((l) => (
+                  <li key={l.name}><a href={l.href} target="_blank" rel="noopener">{l.name}</a></li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </nav>
         <div className="copy">
           <span>© {year} {profile.name}</span>

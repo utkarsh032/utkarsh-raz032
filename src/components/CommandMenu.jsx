@@ -5,6 +5,7 @@ import { toDoc, useDocViewer } from "../utils/docs";
 import { liveChannels } from "../data/channels";
 import { projects } from "../data/projects";
 import { copyText } from "../utils/clipboard";
+import { setTheme, themes } from "../hooks/useTheme";
 import "./CommandMenu.css";
 
 const commands = [
@@ -24,6 +25,7 @@ const commands = [
   ...liveChannels.map((c) => ({ group: "Actions", label: `Open ${c.name}`, hint: "↗", href: c.href })),
   { group: "Actions", label: "View resume", hint: "↵", doc: resumeDoc },
   { group: "Actions", label: "Download resume", hint: "↓", download: profile.resume },
+  ...themes.map((t) => ({ group: "Theme", label: `${t.label} theme`, hint: "◐", theme: t.id })),
 ];
 
 export function CommandMenu({ open, onClose }) {
@@ -61,7 +63,8 @@ export function CommandMenu({ open, onClose }) {
       return;
     }
     onClose();
-    if (c.doc) openDoc([toDoc(c.doc)]);
+    if (c.theme) setTheme(c.theme);
+    else if (c.doc) openDoc([toDoc(c.doc)]);
     else if (c.download) Object.assign(document.createElement("a"), { href: c.download, download: c.download.split("/").pop() }).click();
     else if (c.href) window.open(c.href, "_blank", "noopener");
     else if (c.route) navigate(c.route);

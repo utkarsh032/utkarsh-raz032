@@ -11,7 +11,17 @@
     <title>Utkarsh Raj · Full-stack developer (Angular, React, .NET, SQL)</title>
     <meta name="description" content="Utkarsh Raj, full-stack developer in Greater Noida, India. Ships production Angular, React, .NET and SQL Server apps and builds NOTO, a local-first notes app." />
     <!--seo:end-->
-    <style>html,body{background:#05070b}</style>
+    <style>html,body{background:#05070b}html[data-theme=light],html[data-theme=light] body{background:#f6f7f9}html[data-theme=paper],html[data-theme=paper] body{background:#f4f4f4}</style>
+    <script>
+      // Apply the saved theme before first paint to avoid a flash of the default.
+      try {
+        var t = localStorage.getItem("theme");
+        if (t === "light" || t === "paper") {
+          document.documentElement.dataset.theme = t;
+          document.querySelector('meta[name="theme-color"]').content = t === "light" ? "#f6f7f9" : "#f4f4f4";
+        }
+      } catch (e) {}
+    </script>
   </head>
   <body>
     <div id="root"></div>

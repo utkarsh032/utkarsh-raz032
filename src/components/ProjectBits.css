@@ -1,6 +1,6 @@
 /* Layer strip: ui · api · data */
 .lstrip { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px; }
-.lstrip-seg { position: relative; height: 4px; border-radius: 2px; background: rgba(255, 255, 255, 0.06); }
+.lstrip-seg { position: relative; height: 4px; border-radius: 2px; background: rgba(var(--ov), 0.06); }
 .lstrip-seg.on.s-ui { background: var(--blue); }
 .lstrip-seg.on.s-api { background: var(--violet); }
 .lstrip-seg.on.s-data { background: var(--cyan); }

@@ -12,7 +12,7 @@
 .mrail { position: absolute; left: 44px; right: 32px; top: 49px; height: 2px; border-radius: 2px; background: var(--line); overflow: hidden; }
 .mfill { position: absolute; inset: 0; background: linear-gradient(90deg, var(--blue), var(--violet), var(--cyan), var(--magenta), var(--ok)); transform-origin: left; transition: transform 1.6s var(--ease-io) 0.2s; }
 .js .pipe:not(.in) .mfill { transform: scaleX(0); }
-.mpulse { position: absolute; top: -3px; left: -90px; width: 90px; height: 8px; background: radial-gradient(closest-side, rgba(255, 255, 255, 0.95), transparent); opacity: 0; }
+.mpulse { position: absolute; top: -3px; left: -90px; width: 90px; height: 8px; background: radial-gradient(closest-side, rgba(var(--ov), 0.95), transparent); opacity: 0; }
 .pipe.in .mpulse { animation: pipe-pulse 3.4s var(--ease-io) 1.9s infinite; }
 @keyframes pipe-pulse { 0% { left: -90px; opacity: 0; } 12%, 85% { opacity: 1; } 100% { left: 100%; opacity: 0; } }
 
@@ -36,7 +36,7 @@
 
 .mcard {
   position: relative; flex: 1; display: flex; flex-direction: column; padding: 20px 18px 18px; border-radius: 14px; overflow: hidden;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.01)); border: 1px solid var(--line);
+  background: linear-gradient(180deg, rgba(var(--ov), 0.035), rgba(var(--ov), 0.01)); border: 1px solid var(--line);
   transition: transform 0.3s var(--ease), border-color 0.25s, box-shadow 0.3s, background 0.3s;
 }
 .js .pipe:not(.in) .mcard { opacity: 0; }
@@ -46,7 +46,7 @@
 .mghost { position: absolute; right: 10px; top: -6px; font: 700 64px/1 var(--mono); letter-spacing: -0.06em; color: transparent; -webkit-text-stroke: 1px var(--line2); pointer-events: none; transition: -webkit-text-stroke-color 0.25s; }
 .mstep:hover .mcard {
   transform: translateY(-4px); border-color: color-mix(in srgb, var(--c) 45%, transparent);
-  background: linear-gradient(180deg, color-mix(in srgb, var(--c) 9%, transparent), rgba(255, 255, 255, 0.01));
+  background: linear-gradient(180deg, color-mix(in srgb, var(--c) 9%, transparent), rgba(var(--ov), 0.01));
   box-shadow: 0 24px 50px -28px color-mix(in srgb, var(--c) 70%, transparent);
 }
 .mstep:hover .mcard::before { opacity: 1; }
@@ -54,7 +54,7 @@
 .mstep:hover .mnode { transform: translateY(-2px); }
 .mstep h3 { position: relative; font-size: 19px; letter-spacing: -0.02em; }
 .mcard > p { position: relative; font-size: 14.5px; margin: 8px 0 18px; }
-.mstep .ev { position: relative; margin-top: auto; padding: 11px 12px; border-radius: 9px; background: rgba(5, 7, 11, 0.7); border: 1px solid var(--line); font: 11.5px/1.55 var(--mono); color: var(--t3); }
+.mstep .ev { position: relative; margin-top: auto; padding: 11px 12px; border-radius: 9px; background: rgba(var(--bg-rgb), 0.7); border: 1px solid var(--line); font: 11.5px/1.55 var(--mono); color: var(--t3); }
 .ev b { display: inline-flex; align-items: center; gap: 7px; margin-bottom: 6px; color: var(--c); font-weight: 500; font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; }
 .ev b::before { content: ""; width: 5px; height: 5px; border-radius: 50%; background: currentColor; box-shadow: 0 0 6px currentColor; }
 .ev span { display: block; }
@@ -77,11 +77,11 @@
 
 /* Stack: a layered architecture board with a prod filter */
 
-.seg { display: inline-flex; padding: 3px; border-radius: 9px; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--line); }
+.seg { display: inline-flex; padding: 3px; border-radius: 9px; background: rgba(var(--ov), 0.03); border: 1px solid var(--line); }
 .seg button { display: inline-flex; align-items: center; gap: 7px; padding: 6px 11px; border: 0; border-radius: 6px; background: transparent; color: var(--t3); font: 500 11.5px/1 var(--mono); cursor: pointer; transition: background var(--dur-fast), color var(--dur-fast); }
-.seg button span { padding: 2px 5px; border-radius: 4px; background: rgba(255, 255, 255, 0.06); font-size: 10.5px; }
+.seg button span { padding: 2px 5px; border-radius: 4px; background: rgba(var(--ov), 0.06); font-size: 10.5px; }
 .seg button:hover { color: var(--t1); }
-.seg button[aria-pressed="true"] { color: var(--t1); background: var(--s3); box-shadow: 0 0 0 1px var(--line2) inset, 0 4px 12px -6px rgba(0, 0, 0, 0.8); }
+.seg button[aria-pressed="true"] { color: var(--t1); background: var(--s3); box-shadow: 0 0 0 1px var(--line2) inset, 0 4px 12px -6px var(--shadow-c); }
 .seg button[aria-pressed="true"]:last-child span { color: var(--ok); background: rgba(61, 214, 140, 0.12); }
 
 .layers { position: relative; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
@@ -104,7 +104,7 @@
 .layer-h h3 { font-size: 17px; letter-spacing: -0.015em; }
 .layer-n { font: 600 22px/1 var(--mono); color: var(--t4); letter-spacing: -0.04em; }
 .layer-m { display: flex; align-items: center; gap: 10px; padding: 0 18px 16px; border-bottom: 1px solid var(--line); }
-.layer-m .bar { flex: 1; height: 4px; border-radius: 4px; background: rgba(255, 255, 255, 0.06); overflow: hidden; }
+.layer-m .bar { flex: 1; height: 4px; border-radius: 4px; background: rgba(var(--ov), 0.06); overflow: hidden; }
 .layer-m .bar span { display: block; height: 100%; border-radius: inherit; background: var(--ok); box-shadow: 0 0 10px var(--ok); transform-origin: left; transition: transform 1s var(--ease-io); transition-delay: calc(0.3s + var(--i) * 0.15s); }
 .js .stk:not(.in) .layer-m .bar span { transform: scaleX(0); }
 .layer-m small { font: 10.5px/1 var(--mono); color: var(--t3); white-space: nowrap; }
@@ -112,7 +112,7 @@
 .tech { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 10px; padding: 12px 18px; border-bottom: 1px solid var(--line); transition: background var(--dur-fast), opacity 0.3s var(--ease), filter 0.3s var(--ease); }
 .tech:last-child { border-bottom: 0; }
 .tech::before { content: ""; position: absolute; left: 0; top: 10px; bottom: 10px; width: 2px; border-radius: 2px; background: var(--lc); opacity: 0; transition: opacity var(--dur-fast); }
-.tech:hover { background: rgba(255, 255, 255, 0.025); }
+.tech:hover { background: rgba(var(--ov), 0.025); }
 .tech:hover::before { opacity: 1; }
 .tech b { color: var(--t1); font-weight: 500; font-size: 14.5px; }
 .tech small { grid-column: 1 / -1; font: 11.5px/1.45 var(--mono); color: var(--t3); }
@@ -122,9 +122,9 @@
 .prod-only .tech.is-prod::before { opacity: 1; background: var(--ok); }
 .ctx { align-self: center; font: 500 9.5px/1 var(--mono); letter-spacing: 0.1em; padding: 4px 6px; border-radius: 4px; }
 .ctx.prod { color: var(--ok); background: rgba(61, 214, 140, 0.1); box-shadow: 0 0 0 1px rgba(61, 214, 140, 0.2) inset; }
-.ctx.proj { color: var(--t3); background: rgba(255, 255, 255, 0.05); }
+.ctx.proj { color: var(--t3); background: rgba(var(--ov), 0.05); }
 
-.stk-foot { position: relative; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px 24px; padding: 14px 18px; border-top: 1px solid var(--line); background: rgba(255, 255, 255, 0.015); font: 11.5px/1.4 var(--mono); color: var(--t3); }
+.stk-foot { position: relative; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px 24px; padding: 14px 18px; border-top: 1px solid var(--line); background: rgba(var(--ov), 0.015); font: 11.5px/1.4 var(--mono); color: var(--t3); }
 .flow { display: inline-flex; align-items: center; gap: 8px; }
 .flow > span { color: var(--lc); }
 .flow > span + span::before { content: "→"; color: var(--t4); margin-right: 8px; }
@@ -170,7 +170,7 @@
 .role h3 .at { color: var(--t3); font-weight: 500; }
 .place { margin-top: 4px; font-size: 14px; color: var(--t3); }
 
-.diff { margin-top: 18px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: rgba(5, 7, 11, 0.6); }
+.diff { margin-top: 18px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: rgba(var(--bg-rgb), 0.6); }
 .diff li { display: grid; grid-template-columns: 30px minmax(0, 1fr); font-size: 14.5px; line-height: 1.6; border-left: 2px solid rgba(61, 214, 140, 0.5); transition: background var(--dur-fast); }
 .diff li + li { border-top: 1px solid var(--line); }
 .diff li:hover { background: rgba(61, 214, 140, 0.05); }
@@ -185,7 +185,7 @@
 .tree ul { position: relative; margin-left: 27px; border-left: 1px solid var(--line2); }
 .tr { position: relative; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: start; gap: 12px; padding: 12px 20px 12px 16px; transition: background var(--dur-fast); }
 .tr::before { content: ""; position: absolute; left: 0; top: 24px; width: 10px; height: 1px; background: var(--line2); }
-.tr:hover { background: rgba(255, 255, 255, 0.025); }
+.tr:hover { background: rgba(var(--ov), 0.025); }
 .tr-ic { width: 30px; height: 30px; margin-left: 6px; border-radius: 8px; display: grid; place-items: center; color: var(--blue); background: rgba(77, 141, 255, 0.08); border: 1px solid rgba(77, 141, 255, 0.2); }
 .tr b { display: block; color: var(--t1); font-weight: 500; font-size: 14.5px; line-height: 1.35; }
 .tr small { display: block; margin-top: 3px; font: 11.5px/1.4 var(--mono); color: var(--t3); }

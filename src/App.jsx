@@ -4,7 +4,8 @@ import { applySeo, getSeo } from "./seo";
 import { useIsoLayoutEffect } from "./hooks/motion";
 import { profile } from "./data/profile";
 import { useScrollSpy } from "./hooks/useScrollSpy";
-import { Nav, TraceRail } from "./components/Nav";
+import { Nav } from "./components/Nav";
+import { ScrollThumb } from "./components/ScrollThumb";
 import { CommandMenu } from "./components/CommandMenu";
 import { DocViewerProvider } from "./components/DocViewer";
 import { Footer } from "./sections/Closing";
@@ -29,7 +30,8 @@ function ScrollManager() {
   const { pathname, hash } = useLocation();
   useEffect(() => {
     if (!hash) {
-      window.scrollTo(0, 0);
+      // Instant: a page change shouldn't animate up from the old scroll position.
+      window.scrollTo({ top: 0, behavior: "instant" });
       return;
     }
     // Wait a frame so lazily rendered routes have mounted their sections.
@@ -41,7 +43,7 @@ function ScrollManager() {
 }
 
 function Layout() {
-  const { scrolled, progress, activeId, span } = useScrollSpy();
+  const { scrolled, activeId } = useScrollSpy();
   const [menuOpen, setMenuOpen] = useState(false);
 
   // Enable reveal animations only after hydration, once on-screen content is marked visible.
@@ -67,7 +69,7 @@ function Layout() {
       <ScrollManager />
       <SeoManager />
       <Nav scrolled={scrolled} activeId={activeId} onOpenMenu={() => setMenuOpen(true)} />
-      <TraceRail progress={progress} span={span} />
+      <ScrollThumb />
       <main id="main" tabIndex={-1}>
         <Suspense fallback={<div style={{ minHeight: "100vh" }} />}>
           <Outlet />

@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-28",
+  "updated": "2026-10-01",
   "publicRepos": 46,
   "since": "2022",
   "flagship": {
@@ -8,6 +8,12 @@
     "created": "2026-08-14"
   },
   "recent": [
+    {
+      "name": "utkarsh-raz032",
+      "language": "JavaScript",
+      "pushed": "2026-10-01",
+      "url": "https://github.com/utkarsh032/utkarsh-raz032"
+    },
     {
       "name": "my-learning",
       "language": "JavaScript",
@@ -19,12 +25,6 @@
       "language": "TypeScript",
       "pushed": "2026-09-24",
       "url": "https://github.com/utkarsh032/NOTO"
-    },
-    {
-      "name": "robofriends-redux",
-      "language": "JavaScript",
-      "pushed": "2026-09-15",
-      "url": "https://github.com/utkarsh032/robofriends-redux"
     }
   ]
 }

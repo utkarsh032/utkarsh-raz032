@@ -1,0 +1,15 @@
+/* Overlay scroll thumb: a wide invisible hit area with a slim bar inside it. */
+.sbar { position: fixed; top: 4px; right: 0; bottom: 4px; width: 14px; z-index: 60; touch-action: none; }
+.sbar[hidden] { display: none; }
+/* `top` and the counter-translate together keep the thumb inside the track at any thumb height. */
+.sbar i {
+  position: absolute; right: 3px; width: 3px; min-height: 36px; border-radius: 3px;
+  top: calc(var(--scroll, 0) * 100%); transform: translateY(calc(var(--scroll, 0) * -100%));
+  background: var(--t3); opacity: 0; cursor: grab;
+  transition: opacity 0.3s, width var(--dur-fast), background var(--dur-fast);
+}
+.sbar.on i { opacity: 0.55; }
+.sbar:hover i, .sbar.drag i { opacity: 0.9; width: 6px; background: var(--t2); }
+.sbar.drag i { cursor: grabbing; }
+/* Touch screens scroll by swipe: show position only. */
+@media (pointer: coarse) { .sbar { pointer-events: none; width: 8px; } }

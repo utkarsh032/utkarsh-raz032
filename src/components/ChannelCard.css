@@ -16,6 +16,7 @@
 .bc-hashnode, .bc-codeforces { --accent: var(--violet); }
 .bc-substack { --accent: #ff6719; }
 .bc-gfg { --accent: var(--ok); }
+.bc-ted { --accent: #e62b1e; }
 .bc-talks { --accent: var(--magenta); }
 .bc-main { display: grid; grid-template-columns: auto 1fr; column-gap: 12px; align-items: center; color: var(--t1); }
 /* Whole card is clickable via the primary link; the featured link sits above it. */

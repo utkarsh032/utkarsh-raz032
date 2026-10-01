@@ -39,15 +39,15 @@
 .ct-links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
 .ct-links a {
   display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 8px; font-size: 13.5px; color: var(--t2);
-  border: 1px solid var(--line); background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--line); background: rgba(var(--ov), 0.02);
   transition: color var(--dur-fast), border-color var(--dur-fast), background var(--dur-fast);
 }
-.ct-links a:hover { color: var(--t1); border-color: var(--line2); background: rgba(255, 255, 255, 0.05); }
+.ct-links a:hover { color: var(--t1); border-color: var(--line2); background: rgba(var(--ov), 0.05); }
 .ct-links svg { color: var(--t3); transition: color var(--dur-fast); }
 .ct-links a:hover svg { color: var(--blue); }
 
 /* Composer */
-.compose { --panel-bg: rgba(8, 11, 18, 0.85); }
+.compose { --panel-bg: rgba(var(--bg-rgb), 0.85); }
 .compose-body { position: relative; display: grid; font-size: 14px; }
 .compose-row {
   display: grid; grid-template-columns: 56px minmax(0, 1fr) auto; align-items: center; gap: 12px;
@@ -90,11 +90,17 @@
 .compose-sent .mono { color: var(--t1); overflow-wrap: anywhere; }
 
 /* Footer */
-.footer { border-top: 1px solid var(--line); padding-block: 40px calc(40px + env(safe-area-inset-bottom, 0px)); }
-.foot { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 28px; align-items: start; }
+.footer { border-top: 1px solid var(--line); padding-block: 56px calc(40px + env(safe-area-inset-bottom, 0px)); }
+.foot { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 40px clamp(32px, 6vw, 96px); align-items: start; }
 .foot-role { font-size: 14px; color: var(--t3); margin-top: 8px; }
-.foot-motto { margin-top: 14px; font-size: 14px; }
-.foot nav { display: flex; flex-wrap: wrap; gap: 4px 20px; font-size: 14px; color: var(--t3); }
-.foot nav a:hover { color: var(--t1); }
+.foot-motto { margin-top: 14px; font-size: 14px; max-width: 34ch; }
+.foot nav { display: grid; grid-template-columns: repeat(4, auto); gap: 32px clamp(28px, 4vw, 64px); font-size: 14px; }
+.foot-col ul { display: grid; gap: 10px; margin: 14px 0 0; padding: 0; list-style: none; }
+.foot-col a { color: var(--t3); transition: color var(--dur-fast); }
+.foot-col a:hover { color: var(--t1); }
 .copy { grid-column: 1 / -1; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; padding-top: 24px; border-top: 1px solid var(--line); font: 11.5px/1.4 var(--mono); color: var(--t4); }
-@media (max-width: 700px) { .foot { grid-template-columns: 1fr; } }
+@media (max-width: 960px) {
+  .foot { grid-template-columns: 1fr; }
+  .foot nav { justify-content: start; }
+}
+@media (max-width: 560px) { .foot nav { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
