@@ -43,6 +43,10 @@ const stroked = {
   moon: <path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z" />,
   paper: <><path d="M12 6c-2-1.3-4.7-2-8-2v14c3.3 0 6 .7 8 2 2-1.3 4.7-2 8-2V4c-3.3 0-6 .7-8 2Z" /><path d="M12 6v14" /></>,
   close: <path d="M6 6l12 12M18 6 6 18" />,
+  copy: <><rect x="9" y="9" width="11" height="11" rx="2" /><path d="M5 15V6a2 2 0 0 1 2-2h9" /></>,
+  check: <path d="m5 12.5 4.5 4.5L19 7.5" />,
+  play: <path d="M8 5.5v13l10-6.5Z" />,
+  pause: <path d="M8 5v14M16 5v14" />,
   "chevron-left": <path d="m15 6-6 6 6 6" />,
   "chevron-right": <path d="m9 6 6 6-6 6" />,
 };

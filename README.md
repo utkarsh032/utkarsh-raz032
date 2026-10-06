@@ -29,8 +29,9 @@ All content lives in `src/data/`. Components render whatever is there.
 | File              | Content                                                             |
 | ----------------- | ------------------------------------------------------------------- |
 | `profile.js`      | Name, links, email, availability, nav sections                      |
-| `projects.js`     | Featured project (NOTO), system cards, other builds                 |
-| `caseStudies.js`  | Long-form case studies at `/work/:slug`                             |
+| `projects.js`     | Every project: card, stack, flow, API reference, and its `look` (accent hue and hero visual) |
+| `caseStudies.js`  | Long-form content for `/projects/:slug`: role, architecture map, decisions, postmortems |
+| `excerpts.js`     | Verbatim code excerpts from the project repositories, with line numbers |
 | `stack.js`        | Tools by layer, and where each was used                             |
 | `experience.js`   | Roles, education, certifications, "How I work" steps                |
 | `github.json`     | Generated before each build. Don't edit by hand.                    |
@@ -40,7 +41,7 @@ information only.
 
 ## Deploy
 
-Netlify. `public/_redirects` sends every route to `index.html` so `/work/:slug` works on refresh.
+Netlify. Every route is prerendered to its own HTML file; `public/_redirects` redirects the old `/work/:slug` URLs to `/projects/:slug`.
 
 ### Contact form
 
