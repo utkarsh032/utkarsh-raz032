@@ -1,6 +1,9 @@
 /* Channel cards: shared by the home Beyond section and /beyond */
 .bc { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
-@media (max-width: 960px) { .bc { grid-template-columns: 1fr; } }
+@media (max-width: 960px) { .bc { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 620px) { .bc { grid-template-columns: minmax(0, 1fr); } }
+/* Home shows a single row: where the grid has two columns, the third card is left to /beyond. */
+@media (min-width: 621px) and (max-width: 960px) { .bc-row > :nth-child(n + 3) { display: none; } }
 .bc-card {
   --accent: var(--blue);
   position: relative; display: flex; flex-direction: column; gap: 14px; padding: 24px;

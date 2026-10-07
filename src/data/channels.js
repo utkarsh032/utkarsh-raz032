@@ -1,6 +1,6 @@
 // Work outside the day job: where I write, teach, and practice.
 // This file is the single source for these links: the home section, /beyond page, footer, and command menu all read it.
-// Home shows only live channels; /beyond shows everything, with empty-`href` entries as "coming soon" cards.
+// Home shows one row, the first three live channels in this list; /beyond shows everything, with empty-`href` entries as "coming soon" cards.
 // `featured` is optional; drop it in when there's a piece worth pointing at.
 // `icon` falls back to `id`; see components/Icon.jsx for available names.
 export const channels = [
@@ -163,3 +163,6 @@ export const channels = [
 export const channelCategories = ["Video", "Writing", "Practice", "Community"];
 
 export const liveChannels = channels.filter((c) => c.href);
+
+// Reorder the list above to change which channels lead on the home page.
+export const homeChannels = liveChannels.slice(0, 3);
