@@ -1,0 +1,19 @@
+/* Page accent. An element with .tint sets --ph, an oklch hue; everything accent-coloured inside reads --pa.
+   One number re-tints a page, and each theme sets the lightness so the accent stays readable. */
+.tint {
+  --pl: 0.8; --pc: 0.14;
+  --pa: oklch(var(--pl) var(--pc) var(--ph));
+  --pa-soft: color-mix(in oklch, var(--pa) 12%, transparent);
+  --pa-line: color-mix(in oklch, var(--pa) 42%, transparent);
+  --pa-ink: #05070b;
+}
+:root[data-theme="light"] .tint { --pl: 0.45; --pc: 0.16; --pa-ink: #fff; }
+:root[data-theme="paper"] .tint { --pl: 0.25; --pc: 0; --pa-ink: #fff; }
+.tint :focus-visible { outline-color: var(--pa); }
+.tint ::selection { background: color-mix(in oklch, var(--pa) 35%, transparent); }
+.tint .btn-primary { background: var(--pa); color: var(--pa-ink); box-shadow: 0 0 0 1px rgba(var(--ov), 0.14) inset, 0 10px 30px -10px var(--pa); }
+.tint .btn-primary:hover { background: color-mix(in oklch, var(--pa) 86%, var(--t1)); }
+.tint .btn:active { transform: scale(0.98); }
+.tint .lnk:hover { color: var(--pa); }
+.tint .bullets { --bullet: var(--pa); }
+.tint .todo { color: color-mix(in srgb, var(--warn) 78%, var(--t1)); }

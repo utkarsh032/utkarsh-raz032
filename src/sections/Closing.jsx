@@ -69,7 +69,12 @@ export function Beyond() {
   const upcoming = channels.length - liveChannels.length;
   return (
     <Section id="beyond" span="06 · beyond">
-      <SectionHeader id="beyond" num="06" label="Beyond code" title="Writing, teaching, and practice outside the day job." />
+      <SectionHeader id="beyond" num="06" label="Beyond code" title="Writing, teaching, and practice outside the day job.">
+        <p>
+          The code is one layer. How I work a problem, trace a bug and price a decision is on its own page.{" "}
+          <Link className="lnk" to="/beyond">How I think <span aria-hidden="true">→</span></Link>
+        </p>
+      </SectionHeader>
       <ul className="bc bc-row">
         {homeChannels.map((c) => <ChannelCard key={c.id} channel={c} />)}
       </ul>
@@ -78,7 +83,7 @@ export function Beyond() {
           <b>All {liveChannels.length} channels</b>
           <span>Video, writing, practice and community{upcoming > 0 && `, with ${upcoming} more on the way`}.</span>
         </p>
-        <Link className="btn btn-ghost" to="/beyond">
+        <Link className="btn btn-ghost" to="/beyond#channels">
           View all <span aria-hidden="true">→</span>
         </Link>
       </Reveal>

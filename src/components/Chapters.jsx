@@ -1,10 +1,12 @@
 import { useEffect, useRef, useState } from "react";
+import { Reveal } from "./Section";
+import "./Chapters.css";
 
 /**
  * Numbered chapter navigation with scroll spy. A sticky column on wide screens,
- * a sticky strip of chips under the nav on narrow ones (see ProjectPage.css).
+ * a sticky strip of chips under the nav on narrow ones.
  */
-export function ChapterRail({ chapters }) {
+function ChapterRail({ chapters }) {
   const [active, setActive] = useState(chapters[0].id);
   const listRef = useRef(null);
   const ids = chapters.map((c) => c.id).join();
@@ -32,7 +34,7 @@ export function ChapterRail({ chapters }) {
   }, [index]);
 
   return (
-    <nav className="px-rail" aria-label="Chapters">
+    <nav className="ch-rail" aria-label="Chapters">
       <ol ref={listRef} style={{ "--p": (index + 1) / chapters.length }}>
         {chapters.map((c, i) => (
           <li key={c.id}>
@@ -44,5 +46,39 @@ export function ChapterRail({ chapters }) {
         ))}
       </ol>
     </nav>
+  );
+}
+
+function Chapter({ id, n, label, title, lead, children }) {
+  return (
+    <section className="ch" id={id} aria-labelledby={`${id}-h`}>
+      <Reveal className="ch-head">
+        <p className="ch-no"><b>{String(n).padStart(2, "0")}</b>{label}</p>
+        <h2 id={`${id}-h`}>{title}</h2>
+        {lead && <p className="ch-lead">{lead}</p>}
+      </Reveal>
+      {children}
+    </section>
+  );
+}
+
+/**
+ * A page body made of numbered chapters with a rail beside them.
+ * `chapters` is [{ id, label, title, lead, body }]; `children` render after the last chapter.
+ * The page must sit inside a `.tint` element, which supplies the accent.
+ */
+export function Chapters({ chapters, children }) {
+  return (
+    <div className="container ch-layout">
+      <ChapterRail chapters={chapters} />
+      <div className="ch-main">
+        {chapters.map((c, n) => (
+          <Chapter key={c.id} id={c.id} n={n + 1} label={c.label} title={c.title} lead={c.lead}>
+            {c.body}
+          </Chapter>
+        ))}
+        {children}
+      </div>
+    </div>
   );
 }

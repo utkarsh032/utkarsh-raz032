@@ -1,65 +1,8 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { layerNames, layerOrder } from "../../data/projects";
-import { prefersReducedMotion, useOnEnter } from "../../hooks/motion";
 import { useTabs } from "../../hooks/useTabs";
-import { copyText } from "../../utils/clipboard";
-import { Icon } from "../Icon";
+import { CopyButton } from "../CodeBlock";
 import { Reveal } from "../Section";
-
-const COUNT_MS = 900;
-
-/** Counts up to `value` the first time it scrolls into view. Without JS it shows the final number. */
-export function Counter({ value }) {
-  const ref = useOnEnter((el) => {
-    if (prefersReducedMotion()) return;
-    const start = performance.now();
-    const tick = (now) => {
-      const t = Math.min(1, (now - start) / COUNT_MS);
-      el.textContent = Math.round(value * (1 - (1 - t) ** 3)).toLocaleString("en");
-      if (t < 1) requestAnimationFrame(tick);
-    };
-    el.textContent = "0";
-    requestAnimationFrame(tick);
-  });
-  return <span ref={ref}>{value.toLocaleString("en")}</span>;
-}
-
-export function CopyButton({ text, label }) {
-  const [done, setDone] = useState(false);
-  useEffect(() => {
-    if (!done) return;
-    const t = setTimeout(() => setDone(false), 1600);
-    return () => clearTimeout(t);
-  }, [done]);
-  return (
-    <button type="button" className={`px-copy${done ? " is-done" : ""}`} aria-label={label} onClick={async () => setDone(await copyText(text))}>
-      <Icon name={done ? "check" : "copy"} size={14} />
-      <span className="sr-only" role="status">{done ? "Copied" : ""}</span>
-    </button>
-  );
-}
-
-const isComment = (line) => /^\s*(\/\/|--|#|\/?\*)/.test(line);
-
-/** A verbatim excerpt from the project's repository, numbered as it is in the file. */
-export function CodeBlock({ code }) {
-  return (
-    <figure className="px-code">
-      <figcaption>
-        <span>{code.file}</span>
-        <CopyButton text={code.text} label={`Copy the excerpt from ${code.file}`} />
-      </figcaption>
-      <pre tabIndex={0} role="region" aria-label={`Code from ${code.file}`}>
-        <code style={{ counterReset: `ln ${code.from - 1}` }}>
-          {code.text.split("\n").map((line, i) => (
-            <span key={i} className={isComment(line) ? "cm" : undefined}>{line}{"\n"}</span>
-          ))}
-        </code>
-      </pre>
-      {code.note && <p className="px-code-note">{code.note}</p>}
-    </figure>
-  );
-}
 
 /** The stack as lanes, one per layer. A technology with a note explains what it does here. */
 export function StackLanes({ stack, notes = {} }) {

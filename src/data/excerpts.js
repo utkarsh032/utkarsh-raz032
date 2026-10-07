@@ -1,4 +1,4 @@
-// Verbatim excerpts from the project repositories, shown in the "Deep dive" chapter of /projects/:slug.
+// Verbatim excerpts from the project repositories, shown on /projects/:slug ("Deep dive") and on /beyond.
 // `from` is the line the excerpt starts on in `file`. Only shared leading indentation is removed.
 // Keep them exact: when the source changes, update the excerpt and its line number together.
 
@@ -116,6 +116,49 @@ export const excerpts = {
       "    # feed, and nothing about the artifact's name would reveal it.",
       "    Stop-Release -What '-Environment is required in a non-interactive session.' -Found $names `",
       "        -Fix 'Pass -Environment <name>. The menu is only offered when stdin is a real console.'",
+      "}",
+    ].join("\n"),
+  },
+  notoBundler: {
+    file: "apps/desktop/vite.main.config.ts",
+    from: 32,
+    text: [
+      "// Rollup resolves an unmatched import to an empty module and carries on",
+      "// with only a warning, which is how the missing external above became a",
+      "// runtime crash instead of a build failure. Promote it: a main-process",
+      "// import that cannot be resolved should stop the build.",
+      "onwarn(warning, warn) {",
+      "  if (warning.code === 'UNRESOLVED_IMPORT') {",
+      "    throw new Error(",
+      "      `Unresolved import in the main process: ${warning.exporter}. ` +",
+      "        'If it is a Node built-in, add it to EXPERIMENTAL_BUILTINS in vite.main.config.ts.',",
+      "    );",
+      "  }",
+      "  warn(warning);",
+      "},",
+    ].join("\n"),
+  },
+  notoUpsert: {
+    file: "packages/database/src/sqlite/sqlite-database.ts",
+    from: 145,
+    text: [
+      "/**",
+      " * An upsert, not `INSERT OR REPLACE`.",
+      " *",
+      " * With foreign keys on, REPLACE resolves a conflict by deleting the old row",
+      " * first — and that delete cascades. Saving a document would quietly take its",
+      " * files, versions and tag index with it.",
+      " */",
+      "function upsertSql(table: string, columns: readonly string[]): string {",
+      "  const updates = columns",
+      "    .filter((column) => column !== 'id')",
+      "    .map((column) => `${column} = excluded.${column}`)",
+      "    .join(', ');",
+      "",
+      "  return (",
+      "    `INSERT INTO ${table} (${columns.join(', ')}) VALUES (${placeholders(columns.length)})` +",
+      "    ` ON CONFLICT(id) DO UPDATE SET ${updates}`",
+      "  );",
       "}",
     ].join("\n"),
   },

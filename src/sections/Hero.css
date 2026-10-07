@@ -19,6 +19,10 @@
 .idline > span[aria-hidden] { color: var(--t3); }
 .hero h1 { font-size: clamp(46px, 6.2vw, 84px); line-height: 0.96; letter-spacing: -0.045em; }
 .hero h1 .idline { display: flex; width: fit-content; letter-spacing: normal; margin-bottom: 28px; }
+@media (max-width: 520px) {
+  .hero h1 .idline { flex-wrap: wrap; gap: 6px 10px; line-height: 1.3; border-radius: 14px; }
+  .idline > span[aria-hidden]:not(.dot) { display: none; }
+}
 .h1-line { display: block; }
 .hero h1 em {
   font-style: normal; color: transparent; -webkit-background-clip: text; background-clip: text;

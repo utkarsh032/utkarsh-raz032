@@ -40,4 +40,6 @@ function netlifyFunctions() {
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react(), netlifyFunctions()],
+  // The prerenderer reads the manifest to link each lazy page's CSS (scripts/prerender.mjs).
+  build: { manifest: true },
 });

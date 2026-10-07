@@ -1,16 +1,6 @@
 /* Project page (/projects/:slug).
-   Identity: each project sets --ph (accent hue) and a kind class. .px-tint derives the accent from the hue,
-   so one number re-tints the page in every theme; the kind class picks the hero texture. */
-.px-tint {
-  --pl: 0.8; --pc: 0.14;
-  --pa: oklch(var(--pl) var(--pc) var(--ph));
-  --pa-soft: color-mix(in oklch, var(--pa) 12%, transparent);
-  --pa-line: color-mix(in oklch, var(--pa) 42%, transparent);
-  --pa-ink: #05070b;
-  --tex: linear-gradient(var(--line) 1px, transparent 1px) 0 0 / 56px 56px, linear-gradient(90deg, var(--line) 1px, transparent 1px) 0 0 / 56px 56px;
-}
-:root[data-theme="light"] .px-tint { --pl: 0.45; --pc: 0.16; --pa-ink: #fff; }
-:root[data-theme="paper"] .px-tint { --pl: 0.25; --pc: 0; --pa-ink: #fff; }
+   Identity: each project sets --ph (accent hue, see styles/tint.css) and a kind class that picks the hero texture. */
+.px, .px-next { --tex: linear-gradient(var(--line) 1px, transparent 1px) 0 0 / 56px 56px, linear-gradient(90deg, var(--line) 1px, transparent 1px) 0 0 / 56px 56px; }
 /* Textures: ruled paper, dot matrix, sediment bands, board lanes, graph nodes, breakpoint rulers. */
 .px-workspace { --tex: repeating-linear-gradient(to bottom, transparent 0 31px, var(--line) 31px 32px); }
 .px-api { --tex: radial-gradient(circle, var(--line2) 1px, transparent 1.5px) 0 0 / 22px 22px; }
@@ -19,19 +9,10 @@
 .px-graph { --tex: radial-gradient(circle, var(--line2) 1.5px, transparent 2px) 0 0 / 48px 48px, radial-gradient(circle, var(--line) 1px, transparent 1.5px) 24px 24px / 48px 48px; }
 .px-frames { --tex: repeating-linear-gradient(90deg, var(--line2) 0 1px, transparent 1px 8px) 0 0 / 100% 6px no-repeat, repeating-linear-gradient(90deg, var(--line2) 0 1px, transparent 1px 80px) 0 0 / 100% 14px no-repeat, linear-gradient(90deg, var(--line) 1px, transparent 1px) 0 0 / 80px 80px; }
 
-.px :focus-visible { outline-color: var(--pa); }
-.px ::selection { background: color-mix(in oklch, var(--pa) 35%, transparent); }
-.px .btn-primary { background: var(--pa); color: var(--pa-ink); box-shadow: 0 0 0 1px rgba(var(--ov), 0.14) inset, 0 10px 30px -10px var(--pa); }
-.px .btn-primary:hover { background: color-mix(in oklch, var(--pa) 86%, var(--t1)); }
-.px .btn:active { transform: scale(0.98); }
-.px .lnk:hover { color: var(--pa); }
-.px .bullets { --bullet: var(--pa); }
-.px .todo { color: color-mix(in srgb, var(--warn) 78%, var(--t1)); }
 .px h3 { line-height: 1.25; }
 .px code { font: 12.5px var(--mono); }
 .px-sub { display: block; margin: 40px 0 16px; }
 .px-prose { max-width: 68ch; font-size: 17px; }
-.px-main > .todo { margin-top: 8px; justify-self: start; }
 
 /* ---------- Hero ---------- */
 .px-hero { position: relative; isolation: isolate; overflow: hidden; padding-top: calc(var(--nav-h) + 56px); padding-bottom: 56px; border-bottom: 1px solid var(--line); }
@@ -77,37 +58,7 @@
   .px-readout > div:nth-child(n + 3) { margin-top: 20px; border-top: 1px solid var(--line); }
 }
 
-/* ---------- Body: chapter rail + chapters ---------- */
-.px-body { display: grid; grid-template-columns: 180px minmax(0, 1fr); gap: 64px; align-items: start; padding-block: 72px 96px; }
-.px-main { display: grid; grid-template-columns: minmax(0, 1fr); min-width: 0; }
-.px-rail { position: sticky; top: 96px; }
-.px-rail ol { position: relative; display: grid; }
-.px-rail ol::before, .px-rail ol::after { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 1px; background: var(--line); }
-.px-rail ol::after { background: var(--pa); transform-origin: top; transform: scaleY(var(--p)); transition: transform 0.45s var(--ease); }
-.px-rail a { display: flex; align-items: baseline; gap: 12px; padding: 7px 0 7px 18px; font-size: 13.5px; color: var(--t3); transition: color var(--dur-fast), transform 0.25s var(--ease); }
-.px-rail a span { font: 500 10.5px/1 var(--mono); color: var(--t3); transition: color var(--dur-fast); }
-.px-rail a:hover { color: var(--t1); transform: translateX(2px); }
-.px-rail a[aria-current] { color: var(--t1); }
-.px-rail a[aria-current] span { color: var(--pa); }
-@media (max-width: 1100px) {
-  .px-body { grid-template-columns: minmax(0, 1fr); gap: 0; padding-top: 0; }
-  .px-rail { top: calc(env(safe-area-inset-top, 0px) + 56px); z-index: 20; margin-inline: calc(var(--gut) * -1); padding-inline: var(--gut); border-bottom: 1px solid var(--line); background: rgba(var(--bg-rgb), 0.82); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
-  .px-rail ol { display: flex; gap: 4px; padding-block: 10px; overflow-x: auto; scrollbar-width: none; }
-  .px-rail ol::-webkit-scrollbar, .px-rail ol::before, .px-rail ol::after { display: none; }
-  .px-rail a { padding: 9px 11px; border-radius: 7px; border: 1px solid transparent; white-space: nowrap; font-size: 13px; }
-  .px-rail a:hover { transform: none; }
-  .px-rail a[aria-current] { border-color: var(--pa-line); background: var(--pa-soft); }
-}
-
-.px-ch { padding-block: 72px; border-top: 1px solid var(--line); scroll-margin-top: 64px; }
-.px-ch:first-child { padding-top: 0; border-top: 0; }
-@media (max-width: 1100px) { .px-ch { padding-block: 56px; scroll-margin-top: 112px; } .px-ch:first-child { padding-top: 48px; } }
-.px-ch-head { margin-bottom: 36px; }
-.px-ch-no { display: flex; align-items: center; gap: 12px; font: 500 11.5px/1 var(--mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--t3); }
-.px-ch-no b { color: var(--pa); font-weight: 500; }
-.px-ch-no::after { content: ""; width: 48px; height: 1px; background: var(--line2); }
-.px-ch h2 { margin-top: 18px; max-width: 24ch; font-size: clamp(28px, 3.5vw, 44px); line-height: 1.08; letter-spacing: -0.035em; }
-.px-lead { margin-top: 16px; max-width: 60ch; font-size: 17px; }
+/* ---------- Chapters (layout and rail are in components/Chapters.css) ---------- */
 
 /* Brief: an open problem on the left, the answer on the right */
 .px-brief { display: grid; grid-template-columns: minmax(0, 1fr) 44px minmax(0, 1fr); }
@@ -247,17 +198,6 @@
 .px-note-line { max-width: 68ch; font-size: 15px; color: var(--t3); }
 .px-note-line code, .px-table caption code, .px-model li code { padding: 1px 5px; border-radius: 4px; border: 1px solid var(--line); background: var(--s1); color: var(--t1); }
 
-.px-code { margin: 20px 0 0; border: 1px solid var(--line); border-radius: 12px; background: var(--bg0); overflow: hidden; }
-.px-code figcaption { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 6px 8px 6px 16px; border-bottom: 1px solid var(--line); background: rgba(var(--ov), 0.015); font: 500 11.5px/1.4 var(--mono); color: var(--t3); overflow-wrap: anywhere; }
-.px-code pre { margin: 0; padding: 16px 16px 16px 0; overflow-x: auto; tab-size: 2; font: 12.5px/1.7 var(--mono); color: var(--t1); }
-.px-code code > span::before { counter-increment: ln; content: counter(ln); display: inline-block; width: 4ch; margin-right: 18px; text-align: right; color: var(--t4); user-select: none; }
-.px-code .cm { color: var(--t3); }
-.px-code-note { padding: 12px 16px; border-top: 1px solid var(--line); font-size: 14px; }
-.px-copy { position: relative; display: grid; place-items: center; flex: none; width: 30px; height: 30px; cursor: pointer; border: 0; border-radius: 6px; background: transparent; color: var(--t3); transition: color var(--dur-fast), background var(--dur-fast), transform 0.2s var(--ease); }
-.px-copy:hover { color: var(--t1); background: rgba(var(--ov), 0.06); }
-.px-copy:active { transform: scale(0.92); }
-.px-copy.is-done { color: var(--ok); }
-
 .px-filters { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; margin: 16px -4px 0; padding: 2px 4px; }
 .px-filter { display: inline-flex; align-items: center; gap: 8px; flex: none; cursor: pointer; padding: 8px 11px; border-radius: 8px; border: 1px solid var(--line); background: transparent; font: 500 13px/1 var(--sans); color: var(--t3); transition: color var(--dur-fast), background var(--dur-fast), border-color var(--dur-fast); }
 .px-filter span { font: 500 11px/1 var(--mono); color: var(--t3); font-variant-numeric: tabular-nums; }
@@ -273,12 +213,12 @@
 .px-table tbody tr:last-child td { border-bottom: 0; }
 .px-table tbody tr { transition: background var(--dur-fast); }
 .px-table tbody tr:hover { background: rgba(var(--ov), 0.025); }
-.px-table td:first-child, .px-table td:last-child:has(.px-copy) { width: 1%; white-space: nowrap; }
+.px-table td:first-child, .px-table td:last-child:has(.copy-btn) { width: 1%; white-space: nowrap; }
 .px-table td:nth-child(3) { min-width: 170px; }
 .px-table td code { color: var(--t1); white-space: nowrap; }
 .px-guard { font: 11.5px/1.4 var(--mono); color: var(--t3); white-space: nowrap; }
-.px-table .px-copy { opacity: 0.5; }
-.px-table tr:hover .px-copy, .px-table .px-copy:focus-visible, .px-table .px-copy.is-done { opacity: 1; }
+.px-table .copy-btn { opacity: 0.5; }
+.px-table tr:hover .copy-btn, .px-table .copy-btn:focus-visible, .px-table .copy-btn.is-done { opacity: 1; }
 .http { display: inline-block; min-width: 58px; padding: 5px 7px; border-radius: 4px; text-align: center; font: 600 10.5px/1 var(--mono); letter-spacing: 0.06em; }
 .http-get { color: color-mix(in srgb, var(--ok) 75%, var(--t1)); background: rgba(61, 214, 140, 0.1); }
 .http-post { color: color-mix(in srgb, var(--blue) 75%, var(--t1)); background: rgba(77, 141, 255, 0.12); }

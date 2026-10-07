@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { layerNames } from "../../data/projects";
-import { Icon } from "../Icon";
+import { layerNames } from "../data/projects";
+import { Icon } from "./Icon";
 import "./SystemMap.css";
 
 const STEP_MS = 1700;

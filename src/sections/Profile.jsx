@@ -1,8 +1,10 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { BUILD_DATE, useNow } from "../hooks/useNow";
-import { certifications, education, principles, roles } from "../data/experience";
+import { certifications, education, homeCertifications, principles, roles } from "../data/experience";
 import { layers } from "../data/stack";
 import { profile, resumeDoc } from "../data/profile";
+import { ViewLink } from "../components/CredentialBits";
 import { DocLink } from "../components/DocViewer";
 import { toDoc } from "../utils/docs";
 import { Icon } from "../components/Icon";
@@ -135,23 +137,10 @@ function tenure(period, now) {
   return [yrs && `${yrs} yr${yrs > 1 ? "s" : ""}`, mos && `${mos} mo${mos > 1 ? "s" : ""}`].filter(Boolean).join(" ");
 }
 
-// Anything with a file opens in the document viewer; certificates page through as one set.
-const certDocs = certifications.filter((c) => c.href).map((c) => toDoc({ title: c.title, href: c.href, meta: c.by }));
-const eduDocs = education.filter((e) => e.href).map((e) => toDoc({ title: e.title, href: e.href, meta: e.where }));
-
-function ViewLink({ docs, href, title }) {
-  const index = docs.findIndex((d) => d.href === href);
-  return (
-    <DocLink className="verify" doc={docs[index]} docs={docs} index={index}>
-      view <span aria-hidden="true">↗</span>
-      <span className="sr-only"> {title}</span>
-    </DocLink>
-  );
-}
-
 export function Experience() {
   // Build date on the first render, the real date after hydration (keeps prerendered HTML in sync).
   const now = useNow() ?? BUILD_DATE;
+  const moreCerts = certifications.length - homeCertifications.length;
   return (
     <Section id="experience" span="04 · experience">
       <SectionHeader id="experience" num="04" label="Experience" title="Full-stack developer experience, community work and training." />
@@ -188,7 +177,12 @@ export function Experience() {
         </Reveal>
 
         <Reveal as="aside" className="panel train" aria-label="Education and certifications">
-          <WindowBar file="~/credentials" />
+          <WindowBar file="~/credentials">
+            <Link className="wbar-link" to="/credentials">
+              open<span className="sr-only"> all credentials</span>
+              <Icon name="maximize" size={13} />
+            </Link>
+          </WindowBar>
           <div className="tree">
             <h3><Icon name="folder" size={15} />resume/<span>1</span></h3>
             <ul>
@@ -218,26 +212,31 @@ export function Experience() {
                     <b>{e.title}</b>
                     <small>{e.where}</small>
                   </div>
-                  {e.href ? <ViewLink docs={eduDocs} href={e.href} title={`${e.title} certificate`} /> : <span className="tr-when">{e.when}</span>}
+                  {e.href ? <ViewLink set="education" href={e.href} title={`${e.title} certificate`} /> : <span className="tr-when">{e.when}</span>}
                 </li>
               ))}
             </ul>
             <h3><Icon name="folder" size={15} />certifications/<span>{certifications.length}</span></h3>
             <ul>
-              {certifications.map((c) => (
+              {homeCertifications.map((c) => (
                 <li className="tr" key={c.title}>
                   <span className="tr-ic" aria-hidden="true"><Icon name="badge" size={16} /></span>
                   <div>
                     <b>{c.title}</b>
-                    <small>{c.by}</small>
+                    <small>{c.by ?? c.length}</small>
                   </div>
                   {c.href ? (
-                    <ViewLink docs={certDocs} href={c.href} title={`${c.title} certificate`} />
+                    <ViewLink set="certifications" href={c.href} title={`${c.title} certificate`} />
                   ) : (
                     <span className="tr-when">—</span>
                   )}
                 </li>
               ))}
+              {moreCerts > 0 && (
+                <li className="tr tr-more">
+                  <Link to="/credentials">+{moreCerts} more <span aria-hidden="true">→</span></Link>
+                </li>
+              )}
             </ul>
           </div>
         </Reveal>

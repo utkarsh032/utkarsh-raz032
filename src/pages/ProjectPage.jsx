@@ -7,10 +7,13 @@ import { useMagnetic, useSpotlight } from "../hooks/motion";
 import { Breadcrumbs } from "../components/Breadcrumbs";
 import { Icon } from "../components/Icon";
 import { Reveal } from "../components/Section";
-import { ChapterRail } from "../components/Project/ChapterRail";
-import { ApiExplorer, CodeBlock, Counter, FeatureDeck, Postmortems, Reference, StackLanes } from "../components/Project/Parts";
+import { Chapters } from "../components/Chapters";
+import { CodeBlock } from "../components/CodeBlock";
+import { Counter } from "../components/Counter";
+import { SystemMap } from "../components/SystemMap";
+import { ApiExplorer, FeatureDeck, Postmortems, Reference, StackLanes } from "../components/Project/Parts";
 import { Signature } from "../components/Project/Signature";
-import { SystemMap } from "../components/Project/SystemMap";
+import "../styles/tint.css";
 import "./ProjectPage.css";
 
 const Todo = ({ children }) => <p className="todo">TODO · {children}</p>;
@@ -111,19 +114,6 @@ function Hero({ p, cs, facts }) {
         </dl>
       </div>
     </header>
-  );
-}
-
-function Chapter({ id, n, label, title, lead, children }) {
-  return (
-    <section className="px-ch" id={id} aria-labelledby={`${id}-h`}>
-      <Reveal className="px-ch-head">
-        <p className="px-ch-no"><b>{String(n).padStart(2, "0")}</b>{label}</p>
-        <h2 id={`${id}-h`}>{title}</h2>
-        {lead && <p className="px-lead">{lead}</p>}
-      </Reveal>
-      {children}
-    </section>
   );
 }
 
@@ -372,7 +362,7 @@ function Close({ p, cs, prev, next }) {
             <span>{prev.tagline}</span>
           </Link>
           {/* Tinted with the next project's own accent, so the handover starts here. */}
-          <Link className={`px-next px-tint px-${next.look.kind}`} style={{ "--ph": next.look.hue }} to={`/projects/${next.slug}`}>
+          <Link className={`px-next tint px-${next.look.kind}`} style={{ "--ph": next.look.hue }} to={`/projects/${next.slug}`}>
             <span className="label">Next project</span>
             <b>{next.name}</b>
             <span>{next.tagline}</span>
@@ -480,19 +470,9 @@ export default function ProjectPage({ project: p }) {
   ].filter(Boolean);
 
   return (
-    <article className={`px px-tint px-${p.look.kind}`} style={{ "--ph": p.look.hue }}>
+    <article className={`px tint px-${p.look.kind}`} style={{ "--ph": p.look.hue }}>
       <Hero p={p} cs={cs} facts={factsFor(p, cs)} />
-      <div className="container px-body">
-        <ChapterRail chapters={chapters} />
-        <div className="px-main">
-          {chapters.map((c, n) => (
-            <Chapter key={c.id} id={c.id} n={n + 1} label={c.label} title={c.title} lead={c.lead}>
-              {c.body}
-            </Chapter>
-          ))}
-          {p.overview && p.todo && <Todo>{p.todo}</Todo>}
-        </div>
-      </div>
+      <Chapters chapters={chapters}>{p.overview && p.todo && <Todo>{p.todo}</Todo>}</Chapters>
       <Close p={p} cs={cs} prev={prev} next={next} />
     </article>
   );

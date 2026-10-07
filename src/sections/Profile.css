@@ -187,13 +187,15 @@
 .tr::before { content: ""; position: absolute; left: 0; top: 24px; width: 10px; height: 1px; background: var(--line2); }
 .tr:hover { background: rgba(var(--ov), 0.025); }
 .tr-ic { width: 30px; height: 30px; margin-left: 6px; border-radius: 8px; display: grid; place-items: center; color: var(--blue); background: rgba(77, 141, 255, 0.08); border: 1px solid rgba(77, 141, 255, 0.2); }
-.tr b { display: block; color: var(--t1); font-weight: 500; font-size: 14.5px; line-height: 1.35; }
+.tr > div { min-width: 0; }
+.tr b { display: block; overflow-wrap: anywhere; color: var(--t1); font-weight: 500; font-size: 14.5px; line-height: 1.35; }
 .tr small { display: block; margin-top: 3px; font: 11.5px/1.4 var(--mono); color: var(--t3); }
 .tr-when { font: 11.5px/1.4 var(--mono); color: var(--t3); white-space: nowrap; padding-top: 2px; }
-.verify { font: 500 11px/1 var(--mono); color: var(--blue); padding: 6px 8px; border-radius: 6px; border: 1px solid rgba(77, 141, 255, 0.3); background: rgba(77, 141, 255, 0.06); white-space: nowrap; transition: background var(--dur-fast), border-color var(--dur-fast); }
 .tr-acts { display: flex; gap: 6px; }
 .tr-acts .verify:last-child { display: grid; place-items: center; padding: 4px 7px; }
-.verify:hover { background: rgba(77, 141, 255, 0.14); border-color: var(--blue); }
+/* Only rendered when the list is capped: the rest live on /credentials */
+.tr-more a { grid-column: 1 / -1; margin-left: 6px; font: 500 11.5px/1.4 var(--mono); color: var(--blue); }
+.tr-more a:hover { color: var(--blue-hi); }
 
 @media (max-width: 560px) {
   .tl { padding: 22px 16px 22px 48px; }

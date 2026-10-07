@@ -23,4 +23,7 @@
 .wbar-status { display: inline-flex; align-items: center; gap: 8px; color: var(--ok); padding: 5px 10px; border-radius: 999px; border: 1px solid rgba(61, 214, 140, 0.3); background: rgba(61, 214, 140, 0.06); white-space: nowrap; }
 .wbar-led { width: 6px; height: 6px; border-radius: 50%; background: var(--ok); box-shadow: 0 0 8px var(--ok); animation: wbar-led 2s ease-in-out infinite; }
 @keyframes wbar-led { 50% { opacity: 0.3; } }
+/* Opens the panel's full page */
+.wbar-link { display: inline-flex; align-items: center; gap: 7px; color: var(--blue); padding: 6px 9px; border-radius: 6px; border: 1px solid rgba(77, 141, 255, 0.3); background: rgba(77, 141, 255, 0.06); white-space: nowrap; transition: background var(--dur-fast), border-color var(--dur-fast); }
+.wbar-link:hover { background: rgba(77, 141, 255, 0.14); border-color: var(--blue); }
 @media (max-width: 480px) { .wbar-file { display: none; } .wbar > :last-child { margin-left: auto; } }
