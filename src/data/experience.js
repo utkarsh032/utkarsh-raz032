@@ -30,20 +30,26 @@ export const education = [
   { title: "Bachelor of Computer Applications", level: "Undergraduate degree", when: "Jul 2023", year: 2023, where: "Monad University · Hapur" },
 ];
 
-// `by` is the issuer; `length` is the course length, where that is all the record states. `href` is the certificate file.
-// `stack` names entries in data/stack.js, so the certificate can show where the skill is used.
+// `by` is the issuer; `length` is the course length. `href` is the certificate file: a PDF in public/certificates/,
+// or a Drive link for one not kept here. `stack` names entries in data/stack.js, so the certificate can show where the skill is used.
 export const certifications = [
-  { title: "The Complete SQL Bootcamp", length: "30 h", stack: ["SQL Server · T-SQL"] },
+  {
+    title: "The Complete SQL Bootcamp",
+    by: "Udemy",
+    length: "30 h",
+    stack: ["SQL Server · T-SQL"],
+    href: "/certificates/the-complete-sql-bootcamp.pdf",
+  },
   {
     title: "Complete React Developer",
-    by: "ZTM",
+    by: "ZTM · Udemy",
     stack: ["React"],
-    href: "https://drive.google.com/file/d/1NXs-Cui-IeWQny6sb0vz7Lya8WehsbsO/view?usp=sharing",
+    href: "/certificates/complete-react-developer.pdf",
   },
   {
     title: "Career Essentials in Generative AI",
     by: "Microsoft · LinkedIn",
-    href: "https://drive.google.com/file/d/1ig0zRkknylaekrcZMXn-K8oMjtFqUA21/view?usp=sharing",
+    href: "/certificates/career-essentials-in-generative-ai.pdf",
   },
   {
     title: "SQL",
