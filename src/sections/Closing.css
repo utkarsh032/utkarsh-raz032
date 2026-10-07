@@ -4,6 +4,12 @@
 .gh-card { min-width: 0; border: 1px solid var(--line); border-radius: 14px; background: var(--bg1); padding: 24px; }
 .gh-cal { display: flex; flex-direction: column; justify-content: center; }
 .gh-cal-inner { min-height: 150px; overflow-x: auto; color: var(--t3); font-family: var(--mono); }
+/* Narrow cards scroll the year sideways at a readable block size, starting from the most recent weeks. */
+.gh-cal-inner svg { max-width: none; }
+@media (max-width: 960px) {
+  .gh-cal-inner .react-activity-calendar__scroll-container { direction: rtl; }
+  .gh-cal-inner svg { direction: ltr; }
+}
 .gh-wait { font: 12px var(--mono); color: var(--t3); }
 .ghs { margin: 0; }
 .ghs div { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 13px 0; border-bottom: 1px solid var(--line); }

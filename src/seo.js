@@ -1,7 +1,7 @@
 // Page metadata for every route. One source for both sides:
 //  - the browser (applySeo, on each navigation)
 //  - the build-time prerenderer (renderHead, written into each HTML file)
-import { education, roles } from "./data/experience";
+import { certifications, education, roles } from "./data/experience";
 import { profile } from "./data/profile";
 import { flatStack, projectBySlug, projects } from "./data/projects";
 import { layers } from "./data/stack";
@@ -36,7 +36,7 @@ const breadcrumbs = (trail) => ({
 const graph = (...nodes) => ({ "@context": "https://schema.org", "@graph": nodes });
 
 /** Every URL that should exist as a prerendered HTML file (and in the sitemap). */
-export const routes = ["/", "/projects", ...projects.map((p) => `/projects/${p.slug}`), "/beyond"];
+export const routes = ["/", "/projects", ...projects.map((p) => `/projects/${p.slug}`), "/beyond", "/credentials"];
 
 export function getSeo(pathname) {
   const path = pathname.replace(/\/+$/, "") || "/";
@@ -82,13 +82,37 @@ export function getSeo(pathname) {
 
   if (path === "/beyond") {
     return {
-      title: `Beyond code: where I write, record and practice${SUFFIX}`,
-      description: `Where ${profile.name} writes, records, practises and takes part outside the day job, with links to each profile.`,
+      title: `Beyond code: how I think, debug and decide${SUFFIX}`,
+      description: `How ${profile.name} works a problem: real debugging cases, what each decision cost, the path a change takes to a release, and where he writes and practises.`,
       path,
       type: "website",
       jsonLd: graph(
-        { "@type": "CollectionPage", url: abs(path), name: "Beyond code", author: { "@id": `${SITE}/#person` } },
+        { "@type": "AboutPage", url: abs(path), name: "Beyond code", about: { "@id": `${SITE}/#person` }, author: { "@id": `${SITE}/#person` } },
         breadcrumbs([["Home", "/"], ["Beyond code", "/beyond"]]),
+        person
+      ),
+    };
+  }
+
+  if (path === "/credentials") {
+    return {
+      title: `Credentials: resume, education and certifications${SUFFIX}`,
+      description: `The record behind ${profile.name}'s work: a one-page resume, ${education.length} programmes of formal study and ${certifications.length} certificates, with the documents to open.`,
+      path,
+      type: "website",
+      jsonLd: graph(
+        {
+          "@type": "CollectionPage",
+          url: abs(path),
+          name: "Credentials",
+          author: { "@id": `${SITE}/#person` },
+          mainEntity: {
+            "@type": "ItemList",
+            numberOfItems: education.length + certifications.length,
+            itemListElement: [...education, ...certifications].map((c, i) => ({ "@type": "ListItem", position: i + 1, name: c.title })),
+          },
+        },
+        breadcrumbs([["Home", "/"], ["Credentials", "/credentials"]]),
         person
       ),
     };

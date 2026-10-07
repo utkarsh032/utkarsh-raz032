@@ -22,17 +22,22 @@ export const roles = [
   },
 ];
 
+// Newest first. `year` places the entry on the /credentials timeline and `level` says what kind of programme it is.
+// `ongoing` marks one with no end date yet; add `href` to attach a document.
 export const education = [
-  { title: "Master of Computer Applications", when: "2026 —", where: "Integral University · Lucknow" },
-  { title: "Full Stack Web Development", when: "Aug 2025", where: "Masai School" },
-  { title: "Bachelor of Computer Applications", when: "Jul 2023", where: "Monad University · Hapur" },
+  { title: "Master of Computer Applications", level: "Postgraduate degree", when: "2026 —", year: 2026, ongoing: true, where: "Integral University · Lucknow" },
+  { title: "Full Stack Web Development", level: "Full-stack programme", when: "Aug 2025", year: 2025, where: "Masai School" },
+  { title: "Bachelor of Computer Applications", level: "Undergraduate degree", when: "Jul 2023", year: 2023, where: "Monad University · Hapur" },
 ];
 
+// `by` is the issuer; `length` is the course length, where that is all the record states. `href` is the certificate file.
+// `stack` names entries in data/stack.js, so the certificate can show where the skill is used.
 export const certifications = [
-  { title: "The Complete SQL Bootcamp", by: "30 h" },
+  { title: "The Complete SQL Bootcamp", length: "30 h", stack: ["SQL Server · T-SQL"] },
   {
     title: "Complete React Developer",
     by: "ZTM",
+    stack: ["React"],
     href: "https://drive.google.com/file/d/1NXs-Cui-IeWQny6sb0vz7Lya8WehsbsO/view?usp=sharing",
   },
   {
@@ -43,9 +48,13 @@ export const certifications = [
   {
     title: "SQL",
     by: "HackerRank",
+    stack: ["SQL Server · T-SQL"],
     href: "https://drive.google.com/file/d/1iZ92CT04cZfffKFZdUT_xB3HbeUFz2n2/view?usp=sharing",
   },
 ];
+
+// Home previews the first four; /credentials lists every one. Reorder the list above to change which lead.
+export const homeCertifications = certifications.slice(0, 4);
 
 export const principles = [
   {

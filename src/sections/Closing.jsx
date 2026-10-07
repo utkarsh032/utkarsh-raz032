@@ -3,7 +3,7 @@ import { BUILD_DATE, useNow } from "../hooks/useNow";
 import { Link } from "react-router-dom";
 import github from "../data/github.json";
 import { profile, navSections, resumeDoc } from "../data/profile";
-import { channels, liveChannels } from "../data/channels";
+import { channels, homeChannels, liveChannels } from "../data/channels";
 import { ChannelCard } from "../components/ChannelCard";
 import { DocLink } from "../components/DocViewer";
 import { toDoc } from "../utils/docs";
@@ -69,16 +69,21 @@ export function Beyond() {
   const upcoming = channels.length - liveChannels.length;
   return (
     <Section id="beyond" span="06 · beyond">
-      <SectionHeader id="beyond" num="06" label="Beyond code" title="Writing, teaching, and practice outside the day job." />
-      <ul className="bc">
-        {liveChannels.map((c) => <ChannelCard key={c.id} channel={c} />)}
+      <SectionHeader id="beyond" num="06" label="Beyond code" title="Writing, teaching, and practice outside the day job.">
+        <p>
+          The code is one layer. How I work a problem, trace a bug and price a decision is on its own page.{" "}
+          <Link className="lnk" to="/beyond">How I think <span aria-hidden="true">→</span></Link>
+        </p>
+      </SectionHeader>
+      <ul className="bc bc-row">
+        {homeChannels.map((c) => <ChannelCard key={c.id} channel={c} />)}
       </ul>
       <Reveal className="more-work">
         <p>
-          <b>All channels</b>
+          <b>All {liveChannels.length} channels</b>
           <span>Video, writing, practice and community{upcoming > 0 && `, with ${upcoming} more on the way`}.</span>
         </p>
-        <Link className="btn btn-ghost" to="/beyond">
+        <Link className="btn btn-ghost" to="/beyond#channels">
           View all <span aria-hidden="true">→</span>
         </Link>
       </Reveal>

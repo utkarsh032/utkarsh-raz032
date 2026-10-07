@@ -80,6 +80,82 @@ export function useReveal(className = "in") {
   );
 }
 
+/** Sets `data-live="false"` while the element is off screen, so CSS can pause loops nobody can see. */
+export function useLive() {
+  const ref = useRef(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(([e]) => (el.dataset.live = String(e.isIntersecting)));
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+  return ref;
+}
+
+/** Writes the pointer position inside the element to `--mx` / `--my`. Fine pointers only. */
+export function useSpotlight() {
+  const ref = useRef(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || prefersReducedMotion() || !window.matchMedia("(pointer: fine)").matches) return;
+    let frame = 0;
+    const move = (e) => {
+      if (frame) return;
+      frame = requestAnimationFrame(() => {
+        frame = 0;
+        const r = el.getBoundingClientRect();
+        el.style.setProperty("--mx", `${e.clientX - r.left}px`);
+        el.style.setProperty("--my", `${e.clientY - r.top}px`);
+      });
+    };
+    el.addEventListener("pointermove", move);
+    return () => {
+      cancelAnimationFrame(frame);
+      el.removeEventListener("pointermove", move);
+    };
+  }, []);
+  return ref;
+}
+
+/**
+ * Leans whatever is inside the element toward the pointer: writes `--rx` / `--ry` (degrees, up to `max`)
+ * and `--sx` (pointer position across the element, as a percentage). Fine pointers only.
+ */
+export function useTilt(max = 5) {
+  const ref = useRef(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || prefersReducedMotion() || !window.matchMedia("(pointer: fine)").matches) return;
+    let frame = 0;
+    const move = (e) => {
+      if (frame) return;
+      frame = requestAnimationFrame(() => {
+        frame = 0;
+        const r = el.getBoundingClientRect();
+        const x = (e.clientX - r.left) / r.width;
+        const y = (e.clientY - r.top) / r.height;
+        el.style.setProperty("--ry", `${((x - 0.5) * 2 * max).toFixed(2)}deg`);
+        el.style.setProperty("--rx", `${((0.5 - y) * 2 * max).toFixed(2)}deg`);
+        el.style.setProperty("--sx", `${(x * 100).toFixed(1)}%`);
+      });
+    };
+    const leave = () => {
+      cancelAnimationFrame(frame);
+      frame = 0;
+      ["--rx", "--ry", "--sx"].forEach((p) => el.style.removeProperty(p));
+    };
+    el.addEventListener("pointermove", move);
+    el.addEventListener("pointerleave", leave);
+    return () => {
+      leave();
+      el.removeEventListener("pointermove", move);
+      el.removeEventListener("pointerleave", leave);
+    };
+  }, [max]);
+  return ref;
+}
+
 /** Pulls the element up to 6px toward the pointer. Fine pointers only. */
 export function useMagnetic() {
   const ref = useRef(null);

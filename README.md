@@ -18,8 +18,9 @@ Fonts are self-hosted (Geist, JetBrains Mono).
 | Command                  | What it does                                             |
 | ------------------------ | -------------------------------------------------------- |
 | `npm run dev`            | Dev server                                               |
-| `npm run build`          | Refreshes GitHub stats, then builds to `dist/`           |
+| `npm run build`          | Refreshes GitHub stats and the resume preview, then builds to `dist/` |
 | `npm run github:refresh` | Refreshes `src/data/github.json` from the GitHub API     |
+| `npm run resume:preview` | Renders page one of the resume PDF to `public/resume-preview.*` and its facts to `src/data/resume.json` |
 | `npm run lint`           | ESLint                                                   |
 
 ## Editing content
@@ -29,18 +30,27 @@ All content lives in `src/data/`. Components render whatever is there.
 | File              | Content                                                             |
 | ----------------- | ------------------------------------------------------------------- |
 | `profile.js`      | Name, links, email, availability, nav sections                      |
-| `projects.js`     | Featured project (NOTO), system cards, other builds                 |
-| `caseStudies.js`  | Long-form case studies at `/work/:slug`                             |
+| `projects.js`     | Every project: card, stack, flow, API reference, and its `look` (accent hue and hero visual) |
+| `caseStudies.js`  | Long-form content for `/projects/:slug`: role, architecture map, decisions, postmortems |
+| `excerpts.js`     | Verbatim code excerpts from the project repositories, with line numbers |
+| `beyond.js`       | Content for `/beyond`: worked cases, traced faults, decisions, principles, each with its source |
 | `stack.js`        | Tools by layer, and where each was used                             |
-| `experience.js`   | Roles, education, certifications, "How I work" steps                |
+| `experience.js`   | Roles, education, certifications (home shows the first four, `/credentials` all of them), "How I work" steps |
+| `credentials.js`  | Nothing to edit: the `/credentials` record, derived from `experience.js`, `profile.js`, `stack.js` and `resume.json` |
 | `github.json`     | Generated before each build. Don't edit by hand.                    |
+| `resume.json`     | Generated from the resume PDF before each build. Don't edit by hand. |
+
+To update the resume, replace the PDF in `public/`. The next build redraws its preview and re-reads its page count,
+size and last-modified date; `npm run resume:preview` does the same without building.
 
 Case-study fields set to `null` render as a visible **TODO**. Fill them with real, measured
 information only.
 
 ## Deploy
 
-Netlify. `public/_redirects` sends every route to `index.html` so `/work/:slug` works on refresh.
+Netlify. Every route is prerendered to its own HTML file; `public/_redirects` redirects the old `/work/:slug` URLs to `/projects/:slug`.
+Lazy-loaded pages link their own CSS in that file, so they are styled before the script runs. A new lazy page needs
+a line in `lazyPages` in `scripts/prerender.mjs`.
 
 ### Contact form
 

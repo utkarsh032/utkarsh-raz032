@@ -99,11 +99,16 @@ export const featured = {
 // summary   one sentence, used on cards and as the meta description (≤ 160 chars)
 // stack     tools grouped by layer: ui · api · data · ship
 // flow      request or data path, drawn as a vertical pipeline
-// api       REST reference: { base, groups: [{ name, prefix, endpoints: [[METHOD, path, label]] }] }
+// api       REST reference: { base, groups: [{ name, prefix, endpoints: [[METHOD, path, label, guard?]] }] }
 // graphql   { endpoint, queries: [[name, label]], mutations: [[name, label]] }
 // models    [{ name, fields: [] }]
 // highlights [{ title, body }]: engineering decisions visible in the code
-// caseStudy true → /projects/:slug renders the long-form case study instead
+// caseStudy true → the project has long-form content in caseStudies.js (role, architecture, decisions, postmortems)
+// timeline  when it was built, from the repository's commit history
+// team      only for projects with other contributors: { commits, of, others }, counted from git
+// look      visual identity on /projects/:slug: { kind, hue, caption, alt, …data for the hero visual }
+//           kind picks the hero visual and texture: workspace · api · strata · board · graph · frames · path
+//           hue is the accent as an oklch hue angle, taken from the project's own UI where it has one
 // ---------------------------------------------------------------------------
 
 export const categories = ["Full-stack", "Backend", "Frontend", "Data", "Multi-platform"];
@@ -116,12 +121,30 @@ export const projects = [
     category: "Multi-platform",
     year: 2026,
     language: "TypeScript",
+    timeline: "Aug 2026 — present",
+    look: {
+      kind: "workspace",
+      hue: 150,
+      caption: "noto · one shell, three runtimes",
+      alt: "Schematic: the same NOTO document open in a browser, a desktop window and a phone. Each saves to its own local store (Dexie, SQLite over IPC, SQLite over a WebView bridge) behind one storage contract.",
+      runtimes: [
+        { frame: "browser", name: "Web", store: "Dexie · IndexedDB" },
+        { frame: "window", name: "Desktop", store: "SQLite · IPC" },
+        { frame: "phone", name: "Android", store: "SQLite · bridge" },
+      ],
+      path: [
+        { name: "@noto/ui", label: "one shell" },
+        { name: "NotoDataContext", label: "platform seam" },
+        { name: "@noto/database", label: "one storage contract" },
+      ],
+    },
     caseStudy: true,
-    summary: "Local-first notes workspace for web, desktop and Android from one codebase, with optional cloud sync.",
+    summary: "Local-first notes workspace for web, desktop and Android: one UI shell and one storage contract on three runtimes.",
     stack: {
-      ui: ["React", "TypeScript", "Tiptap", "Electron", "Expo"],
-      data: ["Dexie", "SQLite", "Supabase"],
-      ship: ["Turborepo", "Vitest", "Playwright"],
+      ui: ["React", "TypeScript", "Tailwind CSS", "Tiptap", "Zustand", "Electron", "Expo"],
+      api: ["Hono", "PostgreSQL", "Kysely", "Supabase"],
+      data: ["Dexie", "SQLite"],
+      ship: ["pnpm", "Turborepo", "Vitest", "Playwright", "GitHub Actions", "Cloudflare Workers"],
     },
     links: [{ label: "Code", href: "https://github.com/utkarsh032/NOTO" }],
   },
@@ -132,24 +155,130 @@ export const projects = [
     category: "Backend",
     year: 2025,
     language: "JavaScript",
+    timeline: "Sep 2025",
+    look: {
+      kind: "api",
+      hue: 55,
+      caption: "onemart · routes and their guards",
+      alt: "Schematic: six OneMart routes with the guard on each, and the path a request takes: client, JWT check, role check, router, MongoDB.",
+      rows: [
+        ["POST", "/api/auth/login", "public"],
+        ["GET", "/api/product", "public"],
+        ["POST", "/api/cart/add", "JWT"],
+        ["POST", "/api/orders", "JWT"],
+        ["GET", "/api/analytics/top-products", "JWT"],
+        ["PATCH", "/api/vendors/:id/status", "JWT + admin"],
+      ],
+    },
     caseStudy: true,
     home: true,
     live: true,
-    summary: "E-commerce REST API with JWT auth, cart, orders, payments, vendor features and admin analytics.",
+    summary: "E-commerce REST API with JWT auth, catalog, cart, orders, payment records, vendor onboarding and sales analytics.",
     kind: "E-commerce API · Node.js, Express, MongoDB",
-    stack: { api: ["Node.js", "Express", "JWT", "bcrypt"], data: ["MongoDB"], ship: ["Render"] },
-    flowLabel: "Request flow: client, JWT auth, role guard, routers, MongoDB",
+    stack: { api: ["Node.js", "Express", "JWT", "bcrypt"], data: ["MongoDB", "Mongoose"], ship: ["Render"] },
+    flowLabel: "Request flow: client, Express routers, JWT guard, role checks, controllers, MongoDB",
     flow: [
-      { label: "client", tone: "ui" },
-      { label: "JWT", sub: "bcrypt", tone: "api" },
-      { label: "guards", sub: "user · vendor · admin", tone: "api" },
-      { label: "routers", sub: "catalog · cart · orders · pay", tone: "api" },
-      { label: "MongoDB", sub: "indexes · agg", tone: "data" },
+      { label: "client", sub: "JSON · Bearer token", tone: "ui" },
+      { label: "Express", sub: "8 routers under /api", tone: "api" },
+      { label: "protect", sub: "JWT · user reloaded", tone: "api" },
+      { label: "role checks", sub: "admin · owner", tone: "api" },
+      { label: "controllers", sub: "one per domain", tone: "api" },
+      { label: "MongoDB", sub: "7 models · aggregation", tone: "data" },
     ],
     points: [
-      "Authentication, catalog, cart, wishlist, orders and payments",
-      "Separate middleware for customers, vendors and admins",
-      "Admin analytics using MongoDB indexing and aggregation",
+      "Authentication, catalog, cart, wishlist, orders and payment records",
+      "A JWT guard that reloads the user, with admin checks on catalog, order and vendor changes",
+      "Sales reports as MongoDB aggregation pipelines",
+    ],
+    api: {
+      base: "/api",
+      groups: [
+        {
+          name: "Auth",
+          prefix: "/auth",
+          endpoints: [
+            ["POST", "/register", "Create an account"],
+            ["POST", "/login", "Log in and get a token"],
+          ],
+        },
+        {
+          name: "Products",
+          prefix: "/product",
+          endpoints: [
+            ["GET", "/", "List products with search, sort and paging"],
+            ["GET", "/:id", "Get one product"],
+            ["POST", "/add", "Add a product", "JWT + admin"],
+            ["PATCH", "/:id", "Update a product", "JWT + admin"],
+            ["DELETE", "/:id", "Delete a product", "JWT + admin"],
+          ],
+        },
+        {
+          name: "Cart",
+          prefix: "/cart",
+          endpoints: [
+            ["GET", "/", "Get the cart", "JWT"],
+            ["POST", "/add", "Add an item and reserve stock", "JWT"],
+            ["POST", "/remove", "Remove an item and release stock", "JWT"],
+          ],
+        },
+        {
+          name: "Wishlist",
+          prefix: "/wishlist",
+          endpoints: [
+            ["GET", "/", "Get the wishlist", "JWT"],
+            ["POST", "/add", "Add a product", "JWT"],
+            ["POST", "/remove", "Remove a product", "JWT"],
+          ],
+        },
+        {
+          name: "Orders",
+          prefix: "/orders",
+          endpoints: [
+            ["POST", "/", "Create an order", "JWT"],
+            ["GET", "/my", "The caller's orders", "JWT"],
+            ["GET", "/:id", "Get one order", "JWT + owner or admin"],
+            ["PUT", "/:id/pay", "Mark an order paid", "JWT + owner or admin"],
+            ["PUT", "/:id/status", "Change the order status", "JWT + admin"],
+          ],
+        },
+        {
+          name: "Payments",
+          prefix: "/transaction",
+          endpoints: [
+            ["POST", "/", "Record a payment for an order", "JWT"],
+            ["PUT", "/:id/status", "Set the payment status", "JWT + admin"],
+          ],
+        },
+        {
+          name: "Vendors",
+          prefix: "/vendors",
+          endpoints: [
+            ["POST", "/register", "Register a business", "JWT"],
+            ["GET", "/me", "The caller's vendor profile", "JWT"],
+            ["GET", "/", "List vendors", "JWT + admin"],
+            ["PATCH", "/:id/status", "Approve or reject a vendor", "JWT + admin"],
+          ],
+        },
+        {
+          name: "Analytics",
+          prefix: "/analytics",
+          endpoints: [
+            ["GET", "/summary", "Orders, revenue and status counts", "JWT"],
+            ["GET", "/sales/monthly", "Revenue and orders by month", "JWT"],
+            ["GET", "/top-products", "Five best-selling products", "JWT"],
+            ["GET", "/top-customers", "Five highest-spending customers", "JWT"],
+          ],
+        },
+      ],
+    },
+    models: [
+      { name: "User", fields: ["name", "email", "password", "role"] },
+      { name: "Product", fields: ["name", "description", "price", "stock", "category", "brand", "images", "rating", "numReviews", "reviews", "createdBy"] },
+      { name: "Cart", fields: ["userId", "items"] },
+      { name: "Wishlist", fields: ["userId", "products"] },
+      { name: "Order", fields: ["user", "orderItems", "shippingAddress", "paymentStatus", "orderStatus", "totalAmount"] },
+      { name: "Payment", fields: ["orderId", "userId", "amount", "paymentMethod", "paymentStatus", "transactionId"] },
+      { name: "Vendor", fields: ["userId", "businessName", "businessEmail", "businessPhone", "address", "products", "status"] },
     ],
     links: [
       { label: "Live API", href: "https://onemart-backend-exl9.onrender.com/" },
@@ -163,6 +292,22 @@ export const projects = [
     category: "Data",
     year: 2026,
     language: "T-SQL",
+    timeline: "Mar 2026",
+    look: {
+      kind: "strata",
+      hue: 88,
+      caption: "warehouse · bronze → silver → gold",
+      alt: "Schematic: CRM and ERP CSV files land in a bronze layer as delivered, are cleaned and standardised in silver, and are modelled in gold as two dimensions and a fact view.",
+      sources: [
+        { name: "CRM", note: "3 CSV files" },
+        { name: "ERP", note: "3 CSV files" },
+      ],
+      layers: [
+        { name: "bronze", note: "6 tables · as delivered" },
+        { name: "silver", note: "6 tables · cleaned" },
+        { name: "gold", note: "2 dimensions · 1 fact" },
+      ],
+    },
     caseStudy: true,
     home: true,
     summary: "SQL Server warehouse merging CRM and ERP sales data through Bronze, Silver and Gold layers.",
@@ -189,6 +334,13 @@ export const projects = [
     category: "Backend",
     year: 2025,
     language: "JavaScript",
+    timeline: "Mar 2025",
+    look: {
+      kind: "api",
+      hue: 290,
+      caption: "subscription tracker · request path",
+      alt: "Schematic: six of the API's routes, and the path a request takes: client, Arcjet, JWT auth, routes, MongoDB, with reminder workflows on Upstash.",
+    },
     live: true,
     summary: "Subscription management API in Node.js with JWT auth, renewal tracking, automatic expiry and email reminder workflows.",
     problem:
@@ -298,6 +450,14 @@ export const projects = [
     category: "Frontend",
     year: 2025,
     language: "JavaScript",
+    timeline: "Sep 2025",
+    look: {
+      kind: "board",
+      hue: 205,
+      caption: "kanbanflow · a card crossing the board",
+      alt: "Schematic: a board with the three default lists, To Do, In Progress and Done, and one card being dragged from the first to the last.",
+      columns: ["To Do", "In Progress", "Done"],
+    },
     summary: "React 19 Kanban board with drag-and-drop tasks, priorities, due dates, multiple boards per user and Firebase sign-in.",
     problem:
       "Teams and individuals need to see at a glance what is to do, in progress and done. KanbanFlow gives them a lightweight visual board, inspired by Trello and Asana, without a heavy project-management tool.",
@@ -348,6 +508,15 @@ export const projects = [
     category: "Full-stack",
     year: 2024,
     language: "JavaScript",
+    timeline: "Mar 2024",
+    look: {
+      kind: "graph",
+      hue: 350,
+      caption: "expenses tracker · one query, one chart",
+      alt: "Schematic: the categoryStatistics GraphQL query on the left, and the per-category totals it returns drawn as bars for saving, expense and investment. Bar heights are illustrative.",
+      query: ["query {", "  categoryStatistics {", "    category", "    totalAmount", "  }", "}"].join("\n"),
+      bars: ["saving", "expense", "investment"],
+    },
     live: true,
     summary: "Full-stack expense tracker on a GraphQL API (Apollo Server, MongoDB) with session auth and spending charts by category.",
     problem:
@@ -426,6 +595,14 @@ export const projects = [
     category: "Full-stack",
     year: 2024,
     language: "JavaScript",
+    timeline: "Dec 2024 — Jan 2025",
+    team: { commits: 134, of: 158, others: 2 },
+    look: {
+      kind: "path",
+      hue: 305,
+      caption: "udemy clone · request path",
+      alt: "Schematic: the request path from the React and Redux client through the Express routers and authentication to MongoDB.",
+    },
     live: true,
     summary: "MERN e-learning platform with OTP sign-up, course search, video lessons with progress, cart, wishlist and reviews.",
     problem:
@@ -517,6 +694,13 @@ export const projects = [
     category: "Full-stack",
     year: 2025,
     language: "JavaScript",
+    timeline: "Aug 2025",
+    look: {
+      kind: "path",
+      hue: 35,
+      caption: "bookheaven · request path",
+      alt: "Schematic: the request path from the React client through the Express API and JWT authentication to MongoDB.",
+    },
     live: true,
     summary: "Goodreads-inspired MERN reading app: browse and filter books, keep a personal shelf with status and ratings, and read chapters online.",
     problem:
@@ -608,6 +792,13 @@ export const projects = [
     category: "Full-stack",
     year: 2025,
     language: "TypeScript",
+    timeline: "May 2025",
+    look: {
+      kind: "path",
+      hue: 265,
+      caption: "likho.in · stack by layer",
+      alt: "Schematic: the stack by layer. Next.js, TypeScript and Radix UI for the interface, Sanity for content, Sentry and Vercel for delivery.",
+    },
     live: true,
     summary: "Next.js and TypeScript app on Sanity CMS with a Markdown editor, Radix UI components and Sentry error monitoring.",
     problem: null,
@@ -632,6 +823,13 @@ export const projects = [
     category: "Full-stack",
     year: 2023,
     language: "JavaScript",
+    timeline: "Oct 2023",
+    look: {
+      kind: "path",
+      hue: 185,
+      caption: "bharat estate · request path",
+      alt: "Schematic: the request path from the React and Redux client through the Express API and authentication to MongoDB.",
+    },
     summary: "MERN real estate app to create, edit and browse property listings, with JWT and Google sign-in and persisted Redux state.",
     problem:
       "Property owners need a simple way to publish listings with prices, offers and amenities, and buyers or renters need to browse them. Both need accounts they can trust.",
@@ -724,6 +922,13 @@ export const projects = [
     category: "Full-stack",
     year: 2023,
     language: "JavaScript",
+    timeline: "Oct 2023",
+    look: {
+      kind: "path",
+      hue: 255,
+      caption: "book store · request path",
+      alt: "Schematic: the request path from the React client through Firebase Authentication and the Express API to MongoDB.",
+    },
     live: true,
     summary: "MERN book store with a shop, book pages, blog and an admin dashboard to upload, edit and manage books.",
     problem:
@@ -788,6 +993,18 @@ export const projects = [
     category: "Frontend",
     year: 2023,
     language: "JavaScript",
+    timeline: "Feb 2023",
+    look: {
+      kind: "frames",
+      hue: 225,
+      caption: "destination · one grid, three widths",
+      alt: "Schematic: the destination grid at three widths. One column on phones, two from 500 pixels and three from 840 pixels.",
+      frames: [
+        { name: "Phone", note: "1 column", cols: 1 },
+        { name: "≥ 500px", note: "2 columns", cols: 2 },
+        { name: "≥ 840px", note: "3 columns", cols: 3 },
+      ],
+    },
     live: true,
     summary: "Responsive, accessible React travel landing page with a video hero, trip search card, destination grid and reduced-motion support.",
     problem:
@@ -829,6 +1046,18 @@ export const projects = [
     category: "Frontend",
     year: 2023,
     language: "HTML",
+    timeline: "Jan 2023",
+    look: {
+      kind: "frames",
+      hue: 58,
+      caption: "omnifood · desktop first, five breakpoints",
+      alt: "Schematic: the same page at phone, tablet and desktop widths. The stylesheet is desktop first, with five max-width breakpoints from 84em down to 34em.",
+      frames: [
+        { name: "≤ 34em", note: "phones", cols: 1 },
+        { name: "≤ 59em", note: "tablets", cols: 2 },
+        { name: "Wider", note: "the default layout", cols: 3 },
+      ],
+    },
     live: true,
     summary: "Responsive marketing website for a food-delivery service, built with plain HTML, CSS and JavaScript.",
     problem:
@@ -854,3 +1083,14 @@ export const layerNames = { ui: "Interface", api: "Service", data: "Data", ship:
 export const projectBySlug = Object.fromEntries(projects.map((p) => [p.slug, p]));
 export const homeSystems = projects.filter((p) => p.home);
 export const flatStack = (p) => layerOrder.flatMap((l) => p.stack[l] ?? []);
+
+/** A one-column architecture map built from a project's `flow`, for projects without a hand-placed one. */
+export function systemFromFlow({ flow, flowLabel }) {
+  return {
+    desc: flowLabel,
+    cols: 1,
+    nodes: flow.map((f, i) => ({ id: `s${i}`, label: f.label, sub: f.sub, layer: f.tone, at: [0, i] })),
+    edges: flow.slice(1).map((_, i) => ({ from: `s${i}`, to: `s${i + 1}` })),
+    traces: [{ label: flowLabel.split(":")[0], steps: flow.map((_, i) => ({ node: `s${i}` })) }],
+  };
+}

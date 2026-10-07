@@ -3,8 +3,9 @@ import { useRef, useState } from "react";
 /**
  * WAI-ARIA tabs with roving tabindex and arrow-key navigation.
  * Returns the selected key and a prop getter for each tab button.
+ * `vertical` also moves with the up and down arrows, for tab lists drawn as a column.
  */
-export function useTabs(keys, initial = keys[0], onChange) {
+export function useTabs(keys, initial = keys[0], onChange, vertical = false) {
   const [selected, setSelected] = useState(initial);
   const refs = useRef({});
 
@@ -14,7 +15,7 @@ export function useTabs(keys, initial = keys[0], onChange) {
   };
 
   const onKeyDown = (e, i) => {
-    const step = { ArrowRight: 1, ArrowLeft: -1 }[e.key];
+    const step = { ArrowRight: 1, ArrowLeft: -1, ...(vertical && { ArrowDown: 1, ArrowUp: -1 }) }[e.key];
     let next;
     if (step) next = keys[(i + step + keys.length) % keys.length];
     else if (e.key === "Home") next = keys[0];

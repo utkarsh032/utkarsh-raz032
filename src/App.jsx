@@ -14,6 +14,7 @@ import Home from "./pages/Home";
 
 const Projects = lazy(() => import("./pages/Projects"));
 const Beyond = lazy(() => import("./pages/Beyond"));
+const Credentials = lazy(() => import("./pages/Credentials"));
 const ProjectRoute = lazy(() => import("./pages/ProjectRoute"));
 
 /** Keeps title, meta tags and structured data in sync with the route. */
@@ -34,9 +35,14 @@ function ScrollManager() {
       window.scrollTo({ top: 0, behavior: "instant" });
       return;
     }
-    // Wait a frame so lazily rendered routes have mounted their sections.
+    // Lazily loaded routes mount their sections after navigation, so keep looking for a couple of seconds.
     const id = decodeURIComponent(hash.slice(1));
-    const frame = requestAnimationFrame(() => document.getElementById(id)?.scrollIntoView());
+    let tries = 120;
+    let frame = requestAnimationFrame(function seek() {
+      const target = document.getElementById(id);
+      if (target) target.scrollIntoView();
+      else if (tries--) frame = requestAnimationFrame(seek);
+    });
     return () => cancelAnimationFrame(frame);
   }, [pathname, hash]);
   return null;
@@ -104,6 +110,7 @@ export function AppRoutes() {
           <Route path="projects" element={<Projects />} />
           <Route path="projects/:slug" element={<ProjectRoute />} />
           <Route path="beyond" element={<Beyond />} />
+          <Route path="credentials" element={<Credentials />} />
           <Route path="work/:slug" element={<WorkRedirect />} />
           <Route path="*" element={<NotFound />} />
         </Route>

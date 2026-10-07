@@ -9,9 +9,12 @@ import { Icon } from "./Icon";
 import { setTheme, themes, useTheme } from "../hooks/useTheme";
 import "./Nav.css";
 
+// Pages that grew out of a homepage section keep that section lit in the nav.
+const parents = [["/projects", "work"], ["/credentials", "experience"]];
+
 export function Nav({ scrolled, activeId: sectionId, onOpenMenu }) {
   const { pathname } = useLocation();
-  const activeId = pathname === "/" ? sectionId : null;
+  const activeId = pathname === "/" ? sectionId : parents.find(([path]) => pathname.startsWith(path))?.[1] ?? null;
   const linksRef = useRef(null);
   const [indicator, setIndicator] = useState({ x: 0, w: 0 });
   const themeId = useTheme();
