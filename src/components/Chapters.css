@@ -1,5 +1,5 @@
 /* Chapter layout: a numbered rail beside the chapters. The accent comes from the page's .tint (see styles/tint.css). */
-.ch-layout { display: grid; grid-template-columns: 180px minmax(0, 1fr); gap: 64px; align-items: start; padding-block: 72px 96px; }
+.ch-layout { display: grid; grid-template-columns: 180px minmax(0, 1fr); gap: 64px; align-items: start; padding-block: 72px; }
 .ch-main { display: grid; grid-template-columns: minmax(0, 1fr); min-width: 0; }
 .ch-rail { position: sticky; top: 96px; }
 .ch-rail ol { position: relative; display: grid; }
@@ -22,6 +22,8 @@
 
 .ch { padding-block: 72px; border-top: 1px solid var(--line); scroll-margin-top: 64px; }
 .ch:first-child { padding-top: 0; border-top: 0; }
+/* The layout's own bottom padding closes the page. */
+.ch:last-child { padding-bottom: 0; }
 @media (max-width: 1100px) { .ch { padding-block: 56px; scroll-margin-top: 112px; } .ch:first-child { padding-top: 48px; } }
 .ch-head { margin-bottom: 36px; }
 .ch-no { display: flex; align-items: center; gap: 12px; font: 500 11.5px/1 var(--mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--t3); }

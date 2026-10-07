@@ -52,7 +52,7 @@
 @media (max-width: 720px) { .pj-search { flex: 1 1 100%; } }
 
 /* ---------- Grid ---------- */
-.pj-body { padding-block: 32px 112px; }
+.pj-body { padding-block: 32px 96px; }
 .pj-count { font: 12px/1.4 var(--mono); color: var(--t3); margin-bottom: 18px; }
 .pj-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
 @media (max-width: 1060px) { .pj-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
