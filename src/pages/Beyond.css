@@ -309,7 +309,7 @@
 .by-channels-lede { margin-top: 10px; max-width: 60ch; font-size: 16.5px; }
 .by-group h4 { margin-bottom: 16px; }
 .by-group h4 span { margin-left: 6px; color: var(--t3); }
-@media (max-width: 1100px) { .by-channels { scroll-margin-top: 128px; } }
+@media (max-width: 900px) { .by-channels { scroll-margin-top: 128px; } }
 
 /* ---------- Growth ---------- */
 .by-growth { display: grid; gap: 12px; }

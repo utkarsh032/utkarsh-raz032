@@ -472,7 +472,7 @@ export default function ProjectPage({ project: p }) {
   return (
     <article className={`px tint px-${p.look.kind}`} style={{ "--ph": p.look.hue }}>
       <Hero p={p} cs={cs} facts={factsFor(p, cs)} />
-      <Chapters chapters={chapters}>{p.overview && p.todo && <Todo>{p.todo}</Todo>}</Chapters>
+      <Chapters name={p.name} chapters={chapters}>{p.overview && p.todo && <Todo>{p.todo}</Todo>}</Chapters>
       <Close p={p} cs={cs} prev={prev} next={next} />
     </article>
   );
