@@ -200,7 +200,7 @@ export default function Beyond() {
   return (
     <article className="by tint" style={{ "--ph": HUE }}>
       <Hero />
-      <Chapters chapters={chapters} />
+      <Chapters name="Beyond code" chapters={chapters} />
       <section className="by-close" aria-labelledby="by-close-h">
         <div className="container">
           <Reveal>

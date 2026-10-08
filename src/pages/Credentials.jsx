@@ -113,7 +113,7 @@ export default function Credentials() {
   return (
     <article className="cr tint" style={{ "--ph": HUE }}>
       <Hero />
-      <Chapters chapters={chapters} />
+      <Chapters name="Credentials" chapters={chapters} />
       <section className="cr-close" aria-labelledby="cr-close-h">
         <div className="container">
           <Reveal>

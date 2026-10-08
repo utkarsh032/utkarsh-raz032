@@ -309,7 +309,7 @@
 .by-channels-lede { margin-top: 10px; max-width: 60ch; font-size: 16.5px; }
 .by-group h4 { margin-bottom: 16px; }
 .by-group h4 span { margin-left: 6px; color: var(--t3); }
-@media (max-width: 1100px) { .by-channels { scroll-margin-top: 128px; } }
+@media (max-width: 900px) { .by-channels { scroll-margin-top: 128px; } }
 
 /* ---------- Growth ---------- */
 .by-growth { display: grid; gap: 12px; }
@@ -333,7 +333,7 @@
 @media (max-width: 520px) { .by-growth dl { grid-template-columns: minmax(0, 1fr); gap: 14px; } }
 
 /* ---------- Close ---------- */
-.by-close { position: relative; isolation: isolate; overflow: hidden; padding-block: 96px 120px; border-top: 1px solid var(--line); background: var(--bg1); }
+.by-close { position: relative; isolation: isolate; overflow: hidden; padding-block: 96px; border-top: 1px solid var(--line); background: var(--bg1); }
 .by-close::before {
   content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; background: var(--grid);
   -webkit-mask-image: radial-gradient(ellipse 60% 100% at 100% 100%, #000 5%, transparent 70%);

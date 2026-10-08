@@ -1,0 +1,136 @@
+/* Chapter spine (components/Spine.jsx): the page drawn to scale as one line. The accent comes from the page's .tint.
+   The geometry is all CSS. A segment's share of the line is its flex-grow (--len, the chapter's length in screens),
+   and the only value that changes while scrolling is --q, the progress through the current chapter, which is set on
+   the elements marked data-q and nowhere else. */
+.sp { --row: 28px; position: sticky; top: 88px; z-index: 5; }
+/* Nothing animates into place on load (see hooks/useSpine.js). */
+.sp:not([data-ready]) *, .sp:not([data-ready]) *::before, .sp:not([data-ready]) *::after { transition: none !important; }
+.sp-bar { display: none; }
+
+/* Both ends of the line: what is being read at the top, how far through it at the bottom. */
+.sp-origin, .sp-end { position: relative; height: var(--row); padding-left: 24px; font: 500 10.5px/var(--row) var(--mono); letter-spacing: 0.14em; text-transform: uppercase; white-space: nowrap; }
+.sp-origin { overflow: hidden; text-overflow: ellipsis; color: var(--t2); }
+.sp-origin::before, .sp-end::before { content: ""; position: absolute; left: 4px; top: calc(var(--row) / 2 - 2.5px); width: 5px; height: 5px; box-sizing: border-box; background: var(--pa); }
+.sp-end::before { border: 1px solid var(--t3); background: var(--bg0); }
+.sp-odo { display: inline-flex; gap: 0.7em; font: 500 10.5px/1.4 var(--mono); letter-spacing: 0.1em; color: var(--t3); font-variant-numeric: tabular-nums; vertical-align: middle; }
+.sp-odo-win { height: 1.4em; overflow: hidden; color: var(--pa); }
+.sp-odo-reel { display: grid; transform: translateY(calc(var(--i) * -1.4em)); transition: transform 0.5s var(--ease); }
+
+.sp-list { position: relative; display: flex; flex-direction: column; height: min(calc(100vh - 224px), calc(var(--n) * 60px + 100px)); }
+.sp-list::before { content: ""; position: absolute; left: 6px; top: calc(var(--row) / -2); width: 1px; height: var(--row); background: var(--pa); }
+
+/* A segment: the line from this chapter's node to the next, with a tick on its outer side for each screen of reading. */
+.sp-seg { position: relative; flex: var(--len, 1) 0 auto; min-height: var(--row); }
+.sp-seg::before, .sp-seg::after { content: ""; position: absolute; top: calc(var(--row) / 2); height: 100%; pointer-events: none; }
+.sp-seg::before {
+  left: 2px; width: 5px;
+  background:
+    linear-gradient(var(--line2), var(--line2)) 100% 0 / 1px 100% no-repeat,
+    repeating-linear-gradient(to bottom, var(--line2) 0 1px, transparent 1px calc(100% / var(--len, 1)));
+}
+/* Lit once the chapter has been read. */
+.sp-seg::after { left: 6px; width: 1px; background: var(--pa); transform-origin: top; transform: scaleY(0); }
+.sp-seg.is-past::after { transform: none; }
+
+.sp-seg a { display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: 10px; padding: 5px 0 5px 24px; font-size: 13.5px; line-height: 18px; color: var(--t2); }
+.sp-seg a:focus-visible { outline-offset: 1px; }
+/* The node: hollow ahead, solid once passed, haloed when current. */
+.sp-seg a::before { content: ""; position: absolute; left: 3px; top: calc(var(--row) / 2 - 3.5px); width: 7px; height: 7px; box-sizing: border-box; border-radius: 50%; border: 1px solid var(--t3); background: var(--bg0); transition: border-color 0.3s, background 0.3s, box-shadow 0.45s var(--ease); }
+.sp-seg.is-past a::before, .sp-seg.is-at a::before, .sp-seg.is-current a::before { border-color: var(--pa); background: var(--pa); }
+.sp-seg.is-current a::before { box-shadow: 0 0 0 4px var(--pa-soft); }
+.sp-seg a:hover::before { border-color: var(--pa); }
+.sp-no { font: 500 10.5px/18px var(--mono); color: var(--t3); transition: color 0.3s; }
+.sp-seg.is-current .sp-no { color: var(--pa); }
+
+/* Depth: the current chapter is in focus, its neighbours are readable, and the rest are marks on the line
+   until the pointer or keyboard focus comes near. */
+.sp-name { white-space: nowrap; transform-origin: 0 50%; transition: color 0.3s, opacity 0.3s, font-weight 0.3s, transform 0.45s var(--ease); }
+.sp-seg[data-d="0"] .sp-name { color: var(--t1); font-weight: 600; }
+.sp-seg[data-d="2"] .sp-name { color: var(--t3); transform: scale(0.96); }
+.sp-seg[data-d="3"] .sp-name { color: var(--t3); opacity: 0; transform: scale(0.9); }
+.sp:hover .sp-name, .sp:has(a:focus-visible) .sp-name { opacity: 1; transform: none; }
+.sp-seg a:hover .sp-name { color: var(--t1); }
+@media (hover: none) { .sp-seg[data-d="3"] .sp-name { opacity: 1; } }
+
+/* The current chapter opens: its heading unfolds under the name, and the segment lengthens to hold it. */
+.sp-gist { grid-column: 2; display: grid; grid-template-rows: 0fr; font-size: 12.5px; line-height: 1.4; color: var(--t3); opacity: 0; transition: grid-template-rows 0.45s var(--ease), opacity 0.3s; }
+.sp-gist > span { min-height: 0; overflow: hidden; }
+.sp-gist > span::before, .sp-gist > span::after { content: ""; display: block; height: 3px; }
+.sp-gist > span::after { height: 12px; }
+.sp-seg.is-current .sp-gist { grid-template-rows: 1fr; opacity: 1; }
+
+/* Any other chapter shows the same heading beside it on hover or focus. */
+.sp-tip {
+  position: absolute; left: calc(100% + 14px); top: 1px; z-index: 1; width: max-content; max-width: 236px; padding: 10px 13px 11px;
+  border-radius: 10px; border: 1px solid var(--line2); background: var(--bg2); box-shadow: 0 20px 44px -20px var(--shadow-c);
+  font: 400 13px/1.45 var(--sans); color: var(--t2); white-space: normal; pointer-events: none;
+  opacity: 0; visibility: hidden; transform: translateX(-6px); transition: opacity 0.16s, transform 0.25s var(--ease), visibility 0s 0.16s;
+}
+.sp-tip b { display: block; margin-bottom: 5px; font: 500 10.5px/1.3 var(--mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--pa); }
+.sp-tip::before { content: ""; position: absolute; right: 100%; top: 12px; width: 14px; height: 1px; background: var(--pa-line); }
+.sp-seg a:hover .sp-tip, .sp-seg a:focus-visible .sp-tip { opacity: 1; visibility: visible; transform: none; transition-delay: 0.1s, 0.1s, 0.1s; }
+
+/* The playhead, in the current segment only. Its first layer lights the line as far as the reading line has got.
+   The second is as tall as the segment and slides down by --q of its own height, carrying a dot on the line and
+   a hairline out to the edge of the page. */
+.sp-head { --dot: calc(100% - 6.5px) 7px; position: absolute; left: 0; top: calc(var(--row) / 2); width: 13px; height: 100%; pointer-events: none; }
+.sp-head::before { content: ""; position: absolute; left: 6px; top: 0; width: 1px; height: 100%; background: var(--pa); transform-origin: top; transform: scaleY(var(--q, 0)); }
+.sp-head::after {
+  content: ""; position: absolute; left: calc(var(--gut) * -1); right: 0; top: -7px; height: 100%; transform: translateY(calc(var(--q, 0) * 100%));
+  background:
+    radial-gradient(circle at var(--dot), color-mix(in oklch, var(--pa) 35%, var(--t1)) 0 2.6px, transparent 3.4px) no-repeat,
+    radial-gradient(circle at var(--dot), color-mix(in oklch, var(--pa) 55%, transparent), transparent 7px) no-repeat,
+    linear-gradient(90deg, transparent, var(--pa-line)) 0 6.5px / calc(100% - 11px) 1px no-repeat;
+}
+
+/* When the chapter changes, a signal runs the line from the old node to the new one, once, and the new node answers. */
+.sp-relay { position: absolute; left: 5px; top: calc(var(--row) / 2); width: 3px; height: 100%; overflow: hidden; pointer-events: none; }
+.sp-relay.is-up { transform: scaleY(-1); }
+.sp-relay::before { content: ""; position: absolute; inset: 0; border-radius: 2px; background: linear-gradient(to bottom, transparent calc(100% - 30px), color-mix(in oklch, var(--pa) 30%, var(--t1))); transform: translateY(-101%); animation: sp-relay var(--rt) linear var(--rd) forwards; }
+.sp-hit { position: absolute; left: 0; top: calc(var(--row) / 2 - 6.5px); width: 13px; height: 13px; box-sizing: border-box; border-radius: 50%; border: 1px solid var(--pa); opacity: 0; pointer-events: none; animation: sp-hit 0.7s var(--ease) var(--rd) forwards; }
+@keyframes sp-relay { to { transform: translateY(30px); } }
+@keyframes sp-hit { from { opacity: 0.9; transform: scale(0.5); } to { opacity: 0; transform: scale(2.4); } }
+
+@media (min-width: 1280px) { .sp-seg.is-current .sp-tip { display: none; } }
+
+/* Medium screens: a narrow spine. Numbers only, with the current chapter's name written along the line. */
+@media (max-width: 1279px) {
+  .sp-origin { font-size: 0; }
+  .sp-gist { display: none; }
+  .sp-seg a { grid-template-columns: auto; justify-items: start; }
+  .sp .sp-seg .sp-name { writing-mode: vertical-rl; max-height: 0; overflow: hidden; opacity: 0; transform: none; font: 500 10px/14px var(--mono); letter-spacing: 0.14em; text-transform: uppercase; transition: max-height 0.45s var(--ease), opacity 0.3s; }
+  .sp .sp-seg.is-current .sp-name { max-height: 180px; padding-block: 6px 14px; opacity: 1; }
+}
+
+/* Small screens: a bar under the nav saying where you are, with the same links as a map that drops down from it. */
+@media (max-width: 900px) {
+  .sp { --row: 42px; top: calc(env(safe-area-inset-top, 0px) + 56px); z-index: 20; margin-inline: calc(var(--gut) * -1); border-bottom: 1px solid var(--line); background: rgba(var(--bg-rgb), 0.82); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
+  .sp-origin, .sp-end, .sp-tip, .sp-relay, .sp-hit, .sp-list::before { display: none; }
+  .sp-head::after { left: 0; }
+
+  .sp-bar { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; height: 50px; padding-inline: var(--gut) calc(var(--gut) - 10px); }
+  .sp-now { display: flex; align-items: center; gap: 12px; min-width: 0; height: 100%; padding: 0; border: 0; background: none; color: var(--t1); text-align: left; cursor: pointer; }
+  .sp-now .sp-odo { flex: none; font-size: 11px; }
+  .sp-now b { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: 500 14.5px/1.3 var(--sans); animation: sp-swap 0.35s var(--ease); }
+  .sp-now i { flex: none; font: 400 18px/1 var(--mono); color: var(--t3); transition: transform 0.25s var(--ease), color var(--dur-fast); }
+  .sp.is-open .sp-now i { transform: rotate(45deg); color: var(--pa); }
+  .sp-step { display: grid; place-items: center; width: 40px; height: 44px; border-radius: 8px; font: 500 15px/1 var(--mono); color: var(--t2); }
+  span.sp-step { color: var(--t4); }
+  /* The whole page along the bottom edge of the bar, a segment per chapter, to scale. */
+  .sp-meter { position: absolute; inset: auto var(--gut) -1px; display: flex; gap: 3px; height: 2px; }
+  .sp-meter i { position: relative; flex: var(--len, 1) 0 6px; overflow: hidden; border-radius: 2px; background: var(--line2); }
+  .sp-meter i::after { content: ""; position: absolute; inset: 0; background: var(--pa); transform-origin: left; transform: scaleX(0); }
+  .sp-meter .is-past::after { transform: none; }
+  .sp-meter .is-at::after { transform: scaleX(var(--q, 0)); }
+
+  .sp-list { display: none; position: absolute; inset: 100% 0 auto; height: auto; max-height: calc(100dvh - 130px); overflow-y: auto; padding: 8px var(--gut) 14px; border-bottom: 1px solid var(--line2); background: var(--bg1); box-shadow: 0 30px 60px -30px var(--shadow-c); animation: sp-swap 0.3s var(--ease); }
+  .sp.is-open .sp-list { display: block; }
+  .sp-seg::before { left: 6px; width: 1px; background: var(--line2); }
+  .sp-seg:last-child::before, .sp-seg:last-child::after { display: none; }
+  .sp-seg a { grid-template-columns: auto minmax(0, 1fr); column-gap: 14px; padding-block: 12px; font-size: 15px; }
+  .sp .sp-seg .sp-name { writing-mode: horizontal-tb; max-height: none; padding: 0; overflow: visible; opacity: 1; font: inherit; letter-spacing: 0; text-transform: none; color: var(--t2); }
+  .sp .sp-seg.is-current .sp-name { padding: 0; color: var(--t1); font-weight: 600; }
+  .sp-gist { display: grid; grid-template-rows: 1fr; opacity: 1; font-size: 13.5px; }
+  .sp-gist > span::after { height: 0; }
+}
+@keyframes sp-swap { from { opacity: 0; transform: translateY(6px); } }

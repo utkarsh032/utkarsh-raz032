@@ -19,6 +19,7 @@ export function CertificateWall() {
           <h3>{c.title}</h3>
           <p className="cr-cert-by">
             {c.issuer && <>Issued by <b>{c.issuer}</b></>}
+            {c.issuer && c.length && " · "}
             {c.length && <>Course length <b>{c.length}</b></>}
           </p>
           {c.usedIn.length > 0 && (
